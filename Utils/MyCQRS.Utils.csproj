@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{582DCBC0-3A43-4F39-B0FD-313AA658739C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MyCQRS.Utils</RootNamespace>
+    <AssemblyName>MyCQRS.Utils</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Autofac, Version=4.2.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.2.1\lib\net45\Autofac.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CommandHandlerFactory.cs" />
+    <Compile Include="EventHandlerFactory.cs" />
+    <Compile Include="IEventHandlerFactory.cs" />
+    <Compile Include="ICommandHandlerFactory.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ApplicationHelper\MyCQRS.ApplicationHelper.csproj">
+      <Project>{d6228289-060d-4582-adf0-d9e8f4701486}</Project>
+      <Name>MyCQRS.ApplicationHelper</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CommandHandles\MyCQRS.CommandHandlers.csproj">
+      <Project>{17867701-19d9-412d-9e25-070dd63c168e}</Project>
+      <Name>MyCQRS.CommandHandlers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Commands\MyCQRS.Commands.csproj">
+      <Project>{a42e3b2c-6d0b-46a3-913d-ec3f72555ed0}</Project>
+      <Name>MyCQRS.Commands</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Domain\MyCQRS.Domain.csproj">
+      <Project>{410e5f86-c137-45d8-8800-8ccd65a9c6f9}</Project>
+      <Name>MyCQRS.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EventHandles\MyCQRS.EventHandles.csproj">
+      <Project>{a3d5c7e2-f160-448d-9858-d55f7b5f7a6d}</Project>
+      <Name>MyCQRS.EventHandles</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Exceptions\MyCQRS.Exceptions.csproj">
+      <Project>{bb93db06-ce29-4165-a612-4d231dca4b0c}</Project>
+      <Name>MyCQRS.Exceptions</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
