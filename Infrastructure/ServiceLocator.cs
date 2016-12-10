@@ -1,8 +1,8 @@
 ﻿using Autofac;
-using Conf;
 using Messaging;
+using MyCQRS.Messaging;
 
-namespace Infrastructure
+namespace MyCQRS.Web.Auxiliary
 {
     /// <summary>
     /// 是提供给应用层的

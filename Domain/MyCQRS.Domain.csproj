@@ -41,12 +41,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin.cs" />
+    <Compile Include="AggregateRoot.cs" />
     <Compile Include="Event.cs" />
     <Compile Include="IEvent.cs" />
     <Compile Include="IEventProvider.cs" />
+    <Compile Include="IMessageHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\ApplicationHelper\MyCQRS.ApplicationHelper.csproj">
+      <Project>{d6228289-060d-4582-adf0-d9e8f4701486}</Project>
+      <Name>MyCQRS.ApplicationHelper</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -5,8 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Autofac;
 using Messaging;
+using MyCQRS.Messaging;
 
-namespace Conf
+namespace MyCQRS.Web.Auxiliary
 {
    public static class ContainerBootstrapper
     {
