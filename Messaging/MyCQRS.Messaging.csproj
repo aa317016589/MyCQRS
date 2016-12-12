@@ -44,6 +44,8 @@
     <Compile Include="EventBus.cs" />
     <Compile Include="ICommandBus.cs" />
     <Compile Include="IEventBus.cs" />
+    <Compile Include="IProcessBus.cs" />
+    <Compile Include="ProcessBus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -15,7 +15,7 @@ namespace MyCQRS.Web.Auxiliary
         {
             var builder = new ContainerBuilder();
 
-            builder.RegisterType<EventBus>().As<IEventBus>();
+            builder.RegisterType<CommandBus>().As<ICommandBus>();
 
             builder.RegisterType<EventBus>().As<IEventBus>();
  

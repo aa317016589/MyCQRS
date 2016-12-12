@@ -46,6 +46,7 @@
     <Compile Include="IEvent.cs" />
     <Compile Include="IEventProvider.cs" />
     <Compile Include="IMessageHandler.cs" />
+    <Compile Include="IRepositories.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

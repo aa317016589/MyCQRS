@@ -1,7 +1,7 @@
 ﻿using System.Web;
 using System.Web.Mvc;
 
-namespace TestCQRSForMySelf
+namespace MyCQRS.Web
 {
     public class FilterConfig
     {
