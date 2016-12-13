@@ -47,6 +47,7 @@
     <Compile Include="IEventProvider.cs" />
     <Compile Include="IMessageHandler.cs" />
     <Compile Include="IRepositories.cs" />
+    <Compile Include="Mementos\BaseMemento.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

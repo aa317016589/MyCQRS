@@ -1,6 +1,6 @@
-﻿using Exceptions;
-using Messaging;
+﻿using Messaging;
 using MyCQRS.Commands;
+using MyCQRS.Exceptions;
 using MyCQRS.Utils;
 
 namespace MyCQRS.Messaging

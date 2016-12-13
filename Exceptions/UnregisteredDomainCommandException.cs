@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Exceptions
+namespace MyCQRS.Exceptions
 {
     public class UnregisteredDomainCommandException : Exception
     {

@@ -40,13 +40,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EventRepository.cs" />
+    <Compile Include="IEventRepository.cs" />
+    <Compile Include="IEventStorage.cs" />
     <Compile Include="IRepositories.cs" />
+    <Compile Include="Mementos\IOriginator.cs" />
+    <Compile Include="Mementos\Memento.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Domain\MyCQRS.Domain.csproj">
       <Project>{410e5f86-c137-45d8-8800-8ccd65a9c6f9}</Project>
       <Name>MyCQRS.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Exceptions\MyCQRS.Exceptions.csproj">
+      <Project>{BB93DB06-CE29-4165-A612-4D231DCA4B0C}</Project>
+      <Name>MyCQRS.Exceptions</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
