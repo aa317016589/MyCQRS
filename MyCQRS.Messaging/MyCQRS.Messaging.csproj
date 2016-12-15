@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{64833366-377A-4897-AC31-D4BCC6AB4F31}</ProjectGuid>
+    <ProjectGuid>{E45F6F07-5333-43B8-B238-E1AAB497E97C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MyCQRS.ProcessManagers</RootNamespace>
-    <AssemblyName>MyCQRS.ProcessManagers</AssemblyName>
+    <RootNamespace>MyCQRS.Messaging</RootNamespace>
+    <AssemblyName>MyCQRS.Messaging</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -40,12 +40,38 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommandBus.cs" />
+    <Compile Include="EventBus.cs" />
+    <Compile Include="ICommandBus.cs" />
+    <Compile Include="IEventBus.cs" />
+    <Compile Include="IProcessBus.cs" />
+    <Compile Include="ProcessBus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MyCQRS.CommandHandlers\MyCQRS.CommandHandlers.csproj">
+      <Project>{17867701-19d9-412d-9e25-070dd63c168e}</Project>
+      <Name>MyCQRS.CommandHandlers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MyCQRS.Commands\MyCQRS.Commands.csproj">
+      <Project>{a42e3b2c-6d0b-46a3-913d-ec3f72555ed0}</Project>
+      <Name>MyCQRS.Commands</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MyCQRS.Domain\MyCQRS.Domain.csproj">
       <Project>{410e5f86-c137-45d8-8800-8ccd65a9c6f9}</Project>
       <Name>MyCQRS.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MyCQRS.EventHandles\MyCQRS.EventHandles.csproj">
+      <Project>{a3d5c7e2-f160-448d-9858-d55f7b5f7a6d}</Project>
+      <Name>MyCQRS.EventHandles</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MyCQRS.Exceptions\MyCQRS.Exceptions.csproj">
+      <Project>{bb93db06-ce29-4165-a612-4d231dca4b0c}</Project>
+      <Name>MyCQRS.Exceptions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MyCQRS.Utils\MyCQRS.Utils.csproj">
+      <Project>{582dcbc0-3a43-4f39-b0fd-313aa658739c}</Project>
+      <Name>MyCQRS.Utils</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

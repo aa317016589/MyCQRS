@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{64833366-377A-4897-AC31-D4BCC6AB4F31}</ProjectGuid>
+    <ProjectGuid>{A42E3B2C-6D0B-46A3-913D-EC3F72555ED0}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MyCQRS.ProcessManagers</RootNamespace>
-    <AssemblyName>MyCQRS.ProcessManagers</AssemblyName>
+    <RootNamespace>MyCQRS.Commands</RootNamespace>
+    <AssemblyName>MyCQRS.Commands</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -40,13 +40,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Command.cs" />
+    <Compile Include="ICommand.cs" />
+    <Compile Include="PostAddCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\MyCQRS.Domain\MyCQRS.Domain.csproj">
-      <Project>{410e5f86-c137-45d8-8800-8ccd65a9c6f9}</Project>
-      <Name>MyCQRS.Domain</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

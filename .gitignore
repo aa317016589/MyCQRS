@@ -243,3 +243,9 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+/OnlineCheck.AppHelpers
+/OnlineCheck.DBManager
+/OnlineCheck.Dapper
+/NewOnlineCheck
+/OnlineCheck.AppManagerStore
+/OnlineWeb
