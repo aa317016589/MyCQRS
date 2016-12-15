@@ -10,7 +10,8 @@ namespace MyCQRS.Domain.AggregateRoots
     /// <summary>
     /// 帖子
     /// </summary>
-    public class PostAggregate : AggregateRoot
+    public class PostAggregate : AggregateRoot,
+        IHandle<PostAddEvent>
     {
         public Post PostDetail { get; set; }
 
@@ -18,5 +19,22 @@ namespace MyCQRS.Domain.AggregateRoots
         /// 回复集合
         /// </summary>
         public IList<Reply> Replies { get; set; }
+
+
+        public PostAggregate(Guid id, Post post)
+        {
+            ApplyChange(new PostAddEvent(id, post));
+        }
+
+        public PostAggregate()
+        {
+            
+        }
+
+
+        public void Handle(PostAddEvent e)
+        {
+            PostDetail = e.PostDetail;
+        }
     }
 }

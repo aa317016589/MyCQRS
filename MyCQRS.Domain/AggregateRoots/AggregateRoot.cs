@@ -9,7 +9,7 @@ namespace MyCQRS.Domain
         private readonly List<Event> _changes;
 
         public Guid Id { get; internal set; }
-        public int Version { get; internal set; }
+        public int Version { get; set; }
         public int EventVersion { get; protected set; }
 
 
@@ -47,7 +47,7 @@ namespace MyCQRS.Domain
             }
         }
 
- 
+
 
         public void LoadsFromHistory(IEnumerable<Event> history)
         {

@@ -2,8 +2,8 @@
 
 namespace MyCQRS.CommandHandlers
 {
-    public interface ICommandHandler<out TCommand> where TCommand : Command
+    public interface ICommandHandler<TCommand> where TCommand : Command
     {
-        void Execute(Command command);
+        void Execute(TCommand command);
     }
 }

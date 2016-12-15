@@ -2,8 +2,8 @@
 
 namespace MyCQRS.EventHandles
 {
-    public interface IEventHandler<out TEvent> where TEvent :  Event
+    public interface IEventHandler<TEvent> where TEvent :  Event
     {
-        void Handle(Event handle);
+        void Handle(TEvent handle);
     }
 }

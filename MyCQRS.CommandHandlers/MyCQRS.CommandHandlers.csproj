@@ -40,7 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CommandHandler.cs" />
+    <Compile Include="PostAddCommandHandler.cs" />
     <Compile Include="ICommandHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -48,6 +48,10 @@
     <ProjectReference Include="..\MyCQRS.Commands\MyCQRS.Commands.csproj">
       <Project>{a42e3b2c-6d0b-46a3-913d-ec3f72555ed0}</Project>
       <Name>MyCQRS.Commands</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MyCQRS.Domain\MyCQRS.Domain.csproj">
+      <Project>{410e5f86-c137-45d8-8800-8ccd65a9c6f9}</Project>
+      <Name>MyCQRS.Domain</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

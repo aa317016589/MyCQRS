@@ -45,6 +45,12 @@
     <Compile Include="PostAddCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MyCQRS.Domain\MyCQRS.Domain.csproj">
+      <Project>{410e5f86-c137-45d8-8800-8ccd65a9c6f9}</Project>
+      <Name>MyCQRS.Domain</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
