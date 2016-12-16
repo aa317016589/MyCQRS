@@ -4,15 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{87103A67-BA19-4B58-AFDD-A5587FA34325}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{07BD2CFA-2A20-4B45-96C0-305B72C02E55}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MyCQRS.Web.Auxiliary</RootNamespace>
-    <AssemblyName>MyCQRS.Web.Auxiliary</AssemblyName>
+    <RootNamespace>TestXC</RootNamespace>
+    <AssemblyName>TestXC</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +24,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -44,11 +47,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ContainerBootstrapper.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ServiceLocator.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -68,9 +71,25 @@
       <Project>{410e5f86-c137-45d8-8800-8ccd65a9c6f9}</Project>
       <Name>MyCQRS.Domain</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MyCQRS.EventHandles\MyCQRS.EventHandles.csproj">
+      <Project>{a3d5c7e2-f160-448d-9858-d55f7b5f7a6d}</Project>
+      <Name>MyCQRS.EventHandles</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MyCQRS.Exceptions\MyCQRS.Exceptions.csproj">
+      <Project>{bb93db06-ce29-4165-a612-4d231dca4b0c}</Project>
+      <Name>MyCQRS.Exceptions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MyCQRS.Messaging\MyCQRS.Messaging.csproj">
       <Project>{e45f6f07-5333-43b8-b238-e1aab497e97c}</Project>
       <Name>MyCQRS.Messaging</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MyCQRS.ProcessManagers\MyCQRS.ProcessManagers.csproj">
+      <Project>{64833366-377a-4897-ac31-d4bcc6ab4f31}</Project>
+      <Name>MyCQRS.ProcessManagers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MyCQRS.QueryServices\MyCQRS.QueryServices.csproj">
+      <Project>{cfe30188-e836-43ec-aaf3-e7e9db97099a}</Project>
+      <Name>MyCQRS.QueryServices</Name>
     </ProjectReference>
     <ProjectReference Include="..\MyCQRS.Storage\MyCQRS.Storage.csproj">
       <Project>{68aca63e-52b2-413a-aba8-90ddc411a4f2}</Project>
@@ -79,6 +98,14 @@
     <ProjectReference Include="..\MyCQRS.Utils\MyCQRS.Utils.csproj">
       <Project>{582dcbc0-3a43-4f39-b0fd-313aa658739c}</Project>
       <Name>MyCQRS.Utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MyCQRS.Web.Auxiliary\MyCQRS.Web.Auxiliary.csproj">
+      <Project>{87103a67-ba19-4b58-afdd-a5587fa34325}</Project>
+      <Name>MyCQRS.Web.Auxiliary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MyCQRS.Web\MyCQRS.Web.csproj">
+      <Project>{f1656f52-8153-4f45-afd3-0c814c72e9ee}</Project>
+      <Name>MyCQRS.Web</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -50,6 +50,7 @@
     <Compile Include="Events\IEvent.cs" />
     <Compile Include="Events\IEventProvider.cs" />
     <Compile Include="Events\IEventRepository.cs" />
+    <Compile Include="IEventStorage.cs" />
     <Compile Include="IHandle.cs" />
     <Compile Include="IMessageHandler.cs" />
     <Compile Include="IRepositories.cs" />

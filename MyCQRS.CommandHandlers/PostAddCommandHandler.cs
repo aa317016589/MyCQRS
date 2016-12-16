@@ -14,6 +14,11 @@ namespace MyCQRS.CommandHandlers
             _repository = repository;
         }
 
+        public PostAddCommandHandler()
+        {
+            
+        }
+
         public void Execute(PostAddCommand command)
         {
             if (command == null)

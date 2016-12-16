@@ -1,5 +1,4 @@
-﻿using Messaging;
-using MyCQRS.Commands;
+﻿using MyCQRS.Commands;
 using MyCQRS.Exceptions;
 using MyCQRS.Utils;
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using MyCQRS.Domain;
 using MyCQRS.Domain.Mementos;
 
-namespace MyCQRS.Storage
+namespace MyCQRS.Domain
 {
     public interface IEventStorage
     {

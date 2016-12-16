@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyCQRS.ProcessManagers", "M
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyCQRS.Web", "MyCQRS.Web\MyCQRS.Web.csproj", "{F1656F52-8153-4F45-AFD3-0C814C72E9EE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestXC", "TestXC\TestXC.csproj", "{07BD2CFA-2A20-4B45-96C0-305B72C02E55}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +89,10 @@ Global
 		{F1656F52-8153-4F45-AFD3-0C814C72E9EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F1656F52-8153-4F45-AFD3-0C814C72E9EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F1656F52-8153-4F45-AFD3-0C814C72E9EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07BD2CFA-2A20-4B45-96C0-305B72C02E55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07BD2CFA-2A20-4B45-96C0-305B72C02E55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07BD2CFA-2A20-4B45-96C0-305B72C02E55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07BD2CFA-2A20-4B45-96C0-305B72C02E55}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

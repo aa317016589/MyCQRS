@@ -12,7 +12,7 @@ namespace MyCQRS.Utils
         public ICommandHandler<T> GetHandler<T>() where T : Command
         {
             var handlers = GetHandlerTypes<T>();
-            var cmdHandle = handlers.Select(h => Duplicate.Instance.Resolve<ICommandHandler<T>>(h)).FirstOrDefault();
+            var cmdHandle = handlers.Select(h => (ICommandHandler<T>)Duplicate.Instance.Resolve(h)).FirstOrDefault();
 
             return cmdHandle;
         }

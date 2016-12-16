@@ -1,5 +1,5 @@
 ﻿using Autofac;
-using Messaging;
+using MyCQRS.ApplicationHelper;
 using MyCQRS.Messaging;
 
 namespace MyCQRS.Web.Auxiliary
@@ -13,19 +13,20 @@ namespace MyCQRS.Web.Auxiliary
 
         public static IEventBus EventBus { get; private set; }
 
+        public static IMapper Mappers { get; private set; }
 
-
-        static ServiceLocator()
+        public static void Init()
         {
-            ContainerBootstrapper.BootstrapStructureMap();
+            ContainerBuilder containerBuilder = ContainerBootstrapper.BootstrapStructureMap();
 
-            using (var builder = new ContainerBuilder().Build())
-            {
+            var builder = containerBuilder.Build();
 
-                CommandBus = builder.Resolve<ICommandBus>();
+            Duplicate.Create(builder);
 
-                EventBus = builder.Resolve<IEventBus>();
-            }
+            CommandBus = builder.Resolve<ICommandBus>();
+            EventBus = builder.Resolve<IEventBus>();
+            Mappers = builder.Resolve<IMapper>();
+
         }
     }
 }

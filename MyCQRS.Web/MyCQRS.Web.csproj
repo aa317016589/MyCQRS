@@ -50,6 +50,14 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Owin, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -119,6 +127,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\MapperConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -130,6 +139,7 @@
     <Compile Include="Controllers\ReplyController.cs" />
     <Compile Include="Models\ReplyViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />
@@ -169,6 +179,7 @@
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Post\Index.cshtml" />
+    <Content Include="Views\Post\Add.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -180,6 +191,28 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="packages.config" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MyCQRS.ApplicationHelper\MyCQRS.ApplicationHelper.csproj">
+      <Project>{d6228289-060d-4582-adf0-d9e8f4701486}</Project>
+      <Name>MyCQRS.ApplicationHelper</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MyCQRS.Commands\MyCQRS.Commands.csproj">
+      <Project>{a42e3b2c-6d0b-46a3-913d-ec3f72555ed0}</Project>
+      <Name>MyCQRS.Commands</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MyCQRS.Domain\MyCQRS.Domain.csproj">
+      <Project>{410e5f86-c137-45d8-8800-8ccd65a9c6f9}</Project>
+      <Name>MyCQRS.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MyCQRS.Messaging\MyCQRS.Messaging.csproj">
+      <Project>{e45f6f07-5333-43b8-b238-e1aab497e97c}</Project>
+      <Name>MyCQRS.Messaging</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MyCQRS.Web.Auxiliary\MyCQRS.Web.Auxiliary.csproj">
+      <Project>{87103a67-ba19-4b58-afdd-a5587fa34325}</Project>
+      <Name>MyCQRS.Web.Auxiliary</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

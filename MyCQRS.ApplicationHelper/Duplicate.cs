@@ -53,7 +53,7 @@ namespace MyCQRS.ApplicationHelper
 
             autofacDuplicate.Container = container;
 
-            Instance = autofacDuplicate;
+            _instance = autofacDuplicate;
         }
 
         public T Resolve<T>()
@@ -65,6 +65,11 @@ namespace MyCQRS.ApplicationHelper
         public T Resolve<T>(Type type) where T : class
         {
             return (T)Container.Resolve(type);
+        }
+
+        public Object Resolve(Type type)
+        {
+            return Container.Resolve(type);
         }
     }
 }

@@ -41,7 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EventRepository.cs" />
-    <Compile Include="IEventStorage.cs" />
+    <Compile Include="InMemoryEventStorage.cs" />
     <Compile Include="Repositories.cs" />
     <Compile Include="Mementos\IOriginator.cs" />
     <Compile Include="Mementos\Memento.cs" />

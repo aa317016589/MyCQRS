@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using MyCQRS.ApplicationHelper;
+using MyCQRS.Commands;
+using MyCQRS.Domain.Entities;
+using MyCQRS.Web.Auxiliary;
 using MyCQRS.Web.Models;
 
 namespace MyCQRS.Web.Controllers
@@ -16,8 +20,14 @@ namespace MyCQRS.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult Add(PostViewModel post)
+        public ActionResult Add(PostViewModel postViewModel)
         {
+            Post post = Duplicate.Instance.Resolve<IMapper>().Map<Post>(postViewModel);
+
+            post.UserId= Guid.NewGuid();
+
+            ServiceLocator.CommandBus.Send(new PostAddCommand(post.PostId, -1, post));
+ 
             return View();
         }
 
@@ -31,12 +41,7 @@ namespace MyCQRS.Web.Controllers
         {
             return View();
         }
-
-        public ActionResult Add(String id)
-        {
-            return View();
-        }
-
+ 
 
         public ActionResult Delete(String id)
         {
