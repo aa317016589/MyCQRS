@@ -8,6 +8,7 @@ using MyCQRS.ApplicationHelper;
 using MyCQRS.CommandHandlers;
 using MyCQRS.Commands;
 using MyCQRS.Domain;
+using MyCQRS.EventHandles;
 using MyCQRS.Messaging;
 using MyCQRS.Storage;
 using MyCQRS.Utils;
@@ -19,6 +20,15 @@ namespace MyCQRS.Web.Auxiliary
         public static ContainerBuilder BootstrapStructureMap()
         {
             var builder = new ContainerBuilder();
+            builder.RegisterType<InMemoryEventStorage>().As<IEventStorage>();
+            builder.RegisterGeneric(typeof(EventRepository<>)).As(typeof(IEventRepository<>)).InstancePerLifetimeScope();
+            // ReSharper disable once CoVariantArrayConversion
+            builder.RegisterTypes(typeof(ICommandHandler<>).Assembly.DefinedTypes.Where(
+                 s => s.GetInterfaces().Any(a => a.Name == typeof(ICommandHandler<>).Name)).ToArray());
+            // ReSharper disable once CoVariantArrayConversion
+            builder.RegisterTypes(typeof (IEventHandler<>).Assembly.DefinedTypes.Where(
+                s => s.GetInterfaces().Any(a => a.Name == typeof (IEventHandler<>).Name)).ToArray());
+
 
             builder.RegisterType<CommandHandlerFactory>().As<ICommandHandlerFactory>();
             builder.RegisterType<CommandBus>().As<ICommandBus>();
@@ -29,19 +39,9 @@ namespace MyCQRS.Web.Auxiliary
             builder.RegisterGeneric(typeof(Repositories<>)).As(typeof(IRepositories<>)).InstancePerLifetimeScope();
             builder.RegisterGeneric(typeof(EventRepository<>)).As(typeof(IEventRepository<>)).InstancePerLifetimeScope();
 
-            builder.RegisterType<PostAddCommand>().InstancePerLifetimeScope();
 
 
-            //builder.RegisterInstance(typeof(ICommand));
-            builder.RegisterInstance(typeof(AggregateRoot));
-            //builder.RegisterInstance(typeof(ICommandHandler<>));
-            builder.RegisterType<PostAddCommandHandler>();
-            //builder.RegisterType<PostAddCommandHandler>().As(typeof(ICommandHandler<PostAddCommand>)).InstancePerLifetimeScope();
-
-            var f = builder.Build();
-
-
-             builder.RegisterType<Mapper>().As<IMapper>();
+            builder.RegisterType<Mapper>().As<IMapper>();
 
             return builder;
 

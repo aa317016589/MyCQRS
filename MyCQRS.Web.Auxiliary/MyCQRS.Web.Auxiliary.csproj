@@ -68,6 +68,10 @@
       <Project>{410e5f86-c137-45d8-8800-8ccd65a9c6f9}</Project>
       <Name>MyCQRS.Domain</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MyCQRS.EventHandles\MyCQRS.EventHandles.csproj">
+      <Project>{a3d5c7e2-f160-448d-9858-d55f7b5f7a6d}</Project>
+      <Name>MyCQRS.EventHandles</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MyCQRS.Messaging\MyCQRS.Messaging.csproj">
       <Project>{e45f6f07-5333-43b8-b238-e1aab497e97c}</Project>
       <Name>MyCQRS.Messaging</Name>

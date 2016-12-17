@@ -39,7 +39,7 @@ namespace MyCQRS.Domain
         {
             dynamic d = this;
 
-            d.handle(Converter.ChangeTo(@event, @event.GetType()));
+            d.Handle(Converter.ChangeTo(@event, @event.GetType()));
 
             if (isNew)
             {
