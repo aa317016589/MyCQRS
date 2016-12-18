@@ -7,6 +7,7 @@ using System.Linq.Expressions;
 using Dapper.Contrib.Linq2Dapper.Exceptions;
 using Dapper.Contrib.Linq2Dapper.Helpers;
 
+// ReSharper disable once CheckNamespace
 namespace Dapper.Contrib.Linq2Dapper
 {
     internal class QueryProvider<TData> : IQueryProvider

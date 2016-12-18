@@ -10,6 +10,8 @@ using MyCQRS.Commands;
 using MyCQRS.Domain;
 using MyCQRS.EventHandles;
 using MyCQRS.Messaging;
+using MyCQRS.QueryServices;
+using MyCQRS.QueryServices.Dapper;
 using MyCQRS.Storage;
 using MyCQRS.Utils;
 
@@ -24,10 +26,10 @@ namespace MyCQRS.Web.Auxiliary
             builder.RegisterGeneric(typeof(EventRepository<>)).As(typeof(IEventRepository<>)).InstancePerLifetimeScope();
             // ReSharper disable once CoVariantArrayConversion
             builder.RegisterTypes(typeof(ICommandHandler<>).Assembly.DefinedTypes.Where(
-                 s => s.GetInterfaces().Any(a => a.Name == typeof(ICommandHandler<>).Name)).ToArray());
+                 s => s.GetInterfaces().Any(a => a == typeof(ICommandHandler<>))).ToArray());
             // ReSharper disable once CoVariantArrayConversion
             builder.RegisterTypes(typeof (IEventHandler<>).Assembly.DefinedTypes.Where(
-                s => s.GetInterfaces().Any(a => a.Name == typeof (IEventHandler<>).Name)).ToArray());
+                s => s.GetInterfaces().Any(a => a == typeof (IEventHandler<>))).ToArray());
 
 
             builder.RegisterType<CommandHandlerFactory>().As<ICommandHandlerFactory>();
@@ -39,6 +41,9 @@ namespace MyCQRS.Web.Auxiliary
             builder.RegisterGeneric(typeof(Repositories<>)).As(typeof(IRepositories<>)).InstancePerLifetimeScope();
             builder.RegisterGeneric(typeof(EventRepository<>)).As(typeof(IEventRepository<>)).InstancePerLifetimeScope();
 
+
+
+            builder.RegisterType<PostQueryServices>().As<IPostQueryServices>();
 
 
             builder.RegisterType<Mapper>().As<IMapper>();

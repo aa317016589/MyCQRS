@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Linq.Expressions;
-
+// ReSharper disable once CheckNamespace
 namespace Dapper.Contrib.Linq.Extensions
 {
 	public static class LinqExtensions

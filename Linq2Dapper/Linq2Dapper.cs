@@ -5,7 +5,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Expressions;
-
+// ReSharper disable once CheckNamespace
 namespace Dapper.Contrib.Linq2Dapper
 {
     public class Linq2Dapper<TData> : IOrderedQueryable<TData>

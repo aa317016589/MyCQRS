@@ -2,7 +2,7 @@
 using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
-
+// ReSharper disable once CheckNamespace
 namespace Dapper.Contrib.Linq2Dapper.Extensions
 {
     public static class DapperExtensions

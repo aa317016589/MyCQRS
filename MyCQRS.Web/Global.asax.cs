@@ -20,6 +20,8 @@ namespace MyCQRS.Web
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
             ServiceLocator.Init();
+
+            //builder.RegisterControllers(typeof(MvcApplication).Assembly);
         }
     }
 }

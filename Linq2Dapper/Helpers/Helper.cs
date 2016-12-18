@@ -7,6 +7,7 @@ using System.Reflection;
 using Dapper.Contrib.Extensions;
 using TableAttribute = System.ComponentModel.DataAnnotations.Schema.TableAttribute;
 
+// ReSharper disable once CheckNamespace
 namespace Dapper.Contrib.Linq2Dapper.Helpers
 {
     internal class Helper

@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // 有关程序集的一般信息由以下
 // 控制。更改这些特性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle("Linq2Dapper")]
+[assembly: AssemblyTitle("MyCQRS.QueryServices.Dapper")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyProduct("Linq2Dapper")]
+[assembly: AssemblyProduct("MyCQRS.QueryServices.Dapper")]
 [assembly: AssemblyCopyright("Copyright © Microsoft 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // 如果此项目向 COM 公开，则下列 GUID 用于类型库的 ID
-[assembly: Guid("3b33ede2-3996-4b65-8998-3e2fe6a48f19")]
+[assembly: Guid("17a1e9c7-398a-4c5d-944f-541c727e37ac")]
 
 // 程序集的版本信息由下列四个值组成: 
 //

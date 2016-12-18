@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
+// ReSharper disable once CheckNamespace
 namespace Dapper.Contrib.Linq2Dapper.Helpers
 {
     internal static class TypeSystem
