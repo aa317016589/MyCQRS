@@ -42,7 +42,9 @@
   <ItemGroup>
     <Compile Include="Command.cs" />
     <Compile Include="ICommand.cs" />
+    <Compile Include="PostDeleteCommand.cs" />
     <Compile Include="PostAddCommand.cs" />
+    <Compile Include="PostEditCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

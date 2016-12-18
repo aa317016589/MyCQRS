@@ -1,5 +1,6 @@
 ﻿using System;
 using MyCQRS.Domain;
+using MyCQRS.Domain.Events;
 
 namespace MyCQRS.Messaging
 {

@@ -9,6 +9,7 @@ using MyCQRS.ApplicationHelper;
 using MyCQRS.CommandHandlers;
 using MyCQRS.Domain;
 using MyCQRS.Domain.AggregateRoots;
+using MyCQRS.Domain.Events;
 using MyCQRS.Storage;
 using MyCQRS.Web.Auxiliary;
 

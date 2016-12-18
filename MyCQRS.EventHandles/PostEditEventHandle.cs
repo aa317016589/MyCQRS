@@ -5,18 +5,17 @@ using MyCQRS.Domain.Events;
 
 namespace MyCQRS.EventHandles
 {
-    public class PostAddEventHandle : IEventHandler<PostAddEvent>
+    public class PostEditEventHandle : IEventHandler<PostEditEvent>
     {
         private readonly IRepositories<Post> _reportDatabase;
-        public PostAddEventHandle(IRepositories<Post> reportDatabase)
+        public PostEditEventHandle(IRepositories<Post> reportDatabase)
         {
             _reportDatabase = reportDatabase;
         }
 
-
-        public void Handle(PostAddEvent handle)
+        public void Handle(PostEditEvent handle)
         {
-            //数据库操作 
+            //保存到数据库
         }
     }
 }

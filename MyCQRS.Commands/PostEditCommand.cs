@@ -1,15 +1,14 @@
 ﻿using System;
 using MyCQRS.Domain.Entities;
 
-namespace MyCQRS.Domain
+namespace MyCQRS.Commands
 {
-    public class PostAddEvent : Event
+    public class PostEditCommand : Command
     {
         public Post PostDetail { get; set; }
 
-        public PostAddEvent(Guid aggregateId, Post post)
+        public PostEditCommand(Guid id, int version, Post post) : base(id, version)
         {
-            AggregateId = aggregateId;
             PostDetail = post;
         }
     }

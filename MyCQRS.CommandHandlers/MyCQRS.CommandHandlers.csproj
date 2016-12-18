@@ -42,6 +42,8 @@
   <ItemGroup>
     <Compile Include="PostAddCommandHandler.cs" />
     <Compile Include="ICommandHandler.cs" />
+    <Compile Include="PostDeleteCommandHandle.cs" />
+    <Compile Include="PostEditCommandHandle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -19,7 +19,7 @@ namespace MyCQRS.Web
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            ServiceLocator.Init();
+            AutofacConfig.Register();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using MyCQRS.ApplicationHelper;
+using MyCQRS.Domain.Events;
 
 namespace MyCQRS.Domain
 {

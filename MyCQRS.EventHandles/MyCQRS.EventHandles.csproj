@@ -42,6 +42,8 @@
   <ItemGroup>
     <Compile Include="IEventHandler.cs" />
     <Compile Include="PostAddEventHandle.cs" />
+    <Compile Include="PostDeleteEventHandle.cs" />
+    <Compile Include="PostEditEventHandle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

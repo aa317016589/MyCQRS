@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MyCQRS.Domain
+namespace MyCQRS.Domain.Events
 {
     [Serializable]
     public class Event
