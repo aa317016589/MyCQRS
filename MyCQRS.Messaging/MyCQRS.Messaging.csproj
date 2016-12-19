@@ -45,7 +45,7 @@
     <Compile Include="ICommandBus.cs" />
     <Compile Include="IEventBus.cs" />
     <Compile Include="IProcessBus.cs" />
-    <Compile Include="ProcessBus.cs" />
+    <Compile Include="PostAddProcess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

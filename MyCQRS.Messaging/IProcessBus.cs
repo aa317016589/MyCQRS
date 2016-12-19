@@ -3,8 +3,8 @@ using MyCQRS.Domain.Events;
 
 namespace MyCQRS.Messaging
 {
-    public interface IProcessBus
+    public interface IProcessBus<T> where T : Event
     {
-        void HandleAsync<T>(T @event) where T : Event;
+        void HandleAsync(T @event);
     }
 }

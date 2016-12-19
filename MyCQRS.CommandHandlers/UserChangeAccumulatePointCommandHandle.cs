@@ -28,10 +28,8 @@ namespace MyCQRS.CommandHandlers
             }
 
             var aggregate = _eventRepository.GetById(command.Id);
-
-            aggregate.
-
-            aggregate.Version = command.Version;
+ 
+            aggregate.ChangeAccumulatePoint(command.ChangeAccumulatePoint);
 
             _eventRepository.Save(aggregate, aggregate.Version);
         }

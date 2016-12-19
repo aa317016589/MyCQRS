@@ -8,14 +8,10 @@ namespace MyCQRS.Messaging
     public class EventBus : IEventBus
     {
         private readonly IEventHandlerFactory _eventHandlerFactory;
-
-        private readonly IProcessBus _processBus;
-
-        public EventBus(IEventHandlerFactory eventHandlerFactory, IProcessBus processBus)
+ 
+        public EventBus(IEventHandlerFactory eventHandlerFactory)
         {
             _eventHandlerFactory = eventHandlerFactory;
-
-            _processBus = processBus;
         }
 
         public void Publish<T>(T @event) where T : Event
@@ -26,7 +22,7 @@ namespace MyCQRS.Messaging
                 eventHandler.Handle(@event);
 
                 //搜寻该事件的后续操作，即不属于该聚合根的操作，由 IProcessBus 重新产生 command 发送
-                _processBus.HandleAsync(@event);
+                //   _processBus.HandleAsync(@event);
             }
         }
     }

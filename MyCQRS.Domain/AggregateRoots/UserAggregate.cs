@@ -24,5 +24,11 @@ namespace MyCQRS.Domain.AggregateRoots
         {
             AccumulatePoint = AccumulatePoint + e.ChangeAccumulatePoint;
         }
+
+
+        public void ChangeAccumulatePoint(Int32 accumulatePoint)
+        {
+            ApplyChange(new ChangeAccumulatePointEvent(Id, accumulatePoint));
+        }
     }
 }

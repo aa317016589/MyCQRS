@@ -27,7 +27,7 @@ namespace MyCQRS.Web.Auxiliary
 
 
             builder.RegisterType<EventHandlerFactory>().As<IEventHandlerFactory>();
-            builder.RegisterType<ProcessBus>().As<IProcessBus>();
+            builder.RegisterType<PostAddProcess>().As<IProcessBus<PostAddEvent>>();
             builder.RegisterType<EventBus>().As<IEventBus>();
             builder.RegisterType<InMemoryEventStorage>().As<IEventStorage>();
             builder.RegisterGeneric(typeof(EventRepository<>)).As(typeof(IEventRepository<>)).InstancePerLifetimeScope();
