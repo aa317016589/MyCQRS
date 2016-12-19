@@ -12,6 +12,5 @@ namespace MyCQRS.Commands
         {
             PostDetail = post;
         }
- 
     }
 }

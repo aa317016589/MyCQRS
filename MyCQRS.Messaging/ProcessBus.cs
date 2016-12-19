@@ -8,7 +8,7 @@ namespace MyCQRS.Messaging
     {
         public void HandleAsync<T>(T @event) where T : Event
         {
-            throw new NotImplementedException();
+             
         }
     }
 }

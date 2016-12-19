@@ -22,25 +22,33 @@ namespace MyCQRS.Web.Auxiliary
     {
         public static void BootstrapStructureMap(ContainerBuilder builder)
         {
-    
-            builder.RegisterType<InMemoryEventStorage>().As<IEventStorage>();
-            builder.RegisterGeneric(typeof(EventRepository<>)).As(typeof(IEventRepository<>)).InstancePerLifetimeScope();
-            // ReSharper disable once CoVariantArrayConversion
-            builder.RegisterTypes(typeof(ICommandHandler<>).Assembly.DefinedTypes.Where(
-                 s => s.GetInterfaces().Any(a => a == typeof(ICommandHandler<>))).ToArray());
-            // ReSharper disable once CoVariantArrayConversion
-            builder.RegisterTypes(typeof (IEventHandler<>).Assembly.DefinedTypes.Where(
-                s => s.GetInterfaces().Any(a => a == typeof (IEventHandler<>))).ToArray());
-
-
             builder.RegisterType<CommandHandlerFactory>().As<ICommandHandlerFactory>();
             builder.RegisterType<CommandBus>().As<ICommandBus>();
 
-            builder.RegisterType<ProcessBus>().As<IProcessBus>();
+
             builder.RegisterType<EventHandlerFactory>().As<IEventHandlerFactory>();
+            builder.RegisterType<ProcessBus>().As<IProcessBus>();
             builder.RegisterType<EventBus>().As<IEventBus>();
-            builder.RegisterGeneric(typeof(Repositories<>)).As(typeof(IRepositories<>)).InstancePerLifetimeScope();
+            builder.RegisterType<InMemoryEventStorage>().As<IEventStorage>();
             builder.RegisterGeneric(typeof(EventRepository<>)).As(typeof(IEventRepository<>)).InstancePerLifetimeScope();
+            // ReSharper disable once CoVariantArrayConversion
+            builder.RegisterTypes(
+                typeof(ICommandHandler<>).Assembly.DefinedTypes.Where(
+                    s => s.GetInterfaces().Any(a => a.Name == typeof(ICommandHandler<>).Name)).ToArray());
+
+            builder.RegisterGeneric(typeof(Repositories<>)).As(typeof(IRepositories<>)).InstancePerLifetimeScope();
+            // ReSharper disable once CoVariantArrayConversion
+            builder.RegisterTypes(typeof (IEventHandler<>).Assembly.DefinedTypes.Where(
+                s => s.GetInterfaces().Any(a => a.Name == typeof (IEventHandler<>).Name)).ToArray());
+
+
+
+
+            
+            
+            
+            
+
 
 
 
