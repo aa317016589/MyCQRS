@@ -46,8 +46,7 @@
   <ItemGroup>
     <Compile Include="CommandHandlerFactory.cs" />
     <Compile Include="EventHandlerFactory.cs" />
-    <Compile Include="IEventHandlerFactory.cs" />
-    <Compile Include="ICommandHandlerFactory.cs" />
+    <Compile Include="ProcessFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -74,6 +73,10 @@
     <ProjectReference Include="..\MyCQRS.Exceptions\MyCQRS.Exceptions.csproj">
       <Project>{bb93db06-ce29-4165-a612-4d231dca4b0c}</Project>
       <Name>MyCQRS.Exceptions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MyCQRS.Messaging\MyCQRS.Messaging.csproj">
+      <Project>{e45f6f07-5333-43b8-b238-e1aab497e97c}</Project>
+      <Name>MyCQRS.Messaging</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

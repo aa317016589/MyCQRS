@@ -4,6 +4,7 @@ using System.Linq;
 using MyCQRS.Domain;
 using MyCQRS.Domain.Events;
 using MyCQRS.EventHandles;
+using MyCQRS.Messaging;
 
 namespace MyCQRS.Utils
 {

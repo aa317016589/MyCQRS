@@ -4,7 +4,7 @@ using MyCQRS.Domain;
 using MyCQRS.Domain.Events;
 using MyCQRS.EventHandles;
 
-namespace MyCQRS.Utils
+namespace MyCQRS.Messaging
 {
     public interface IEventHandlerFactory
     {

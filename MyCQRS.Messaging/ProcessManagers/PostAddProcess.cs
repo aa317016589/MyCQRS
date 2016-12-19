@@ -1,12 +1,12 @@
 ﻿using System;
-using MyCQRS.CommandHandlers;
 using MyCQRS.Commands;
 using MyCQRS.Domain;
 using MyCQRS.Domain.Events;
+using MyCQRS.Messaging;
 
-namespace MyCQRS.Messaging
+namespace MyCQRS.Messaging.ProcessManagers
 {
-    public class PostAddProcess : IProcessBus<PostAddEvent>
+    public class PostAddProcess : IProcess<PostAddEvent>
     {
         private ICommandBus CommandBus { get; set; }
 

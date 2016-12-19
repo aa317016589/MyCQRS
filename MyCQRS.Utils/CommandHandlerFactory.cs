@@ -4,6 +4,7 @@ using System.Linq;
 using MyCQRS.ApplicationHelper;
 using MyCQRS.CommandHandlers;
 using MyCQRS.Commands;
+using MyCQRS.Messaging;
 
 namespace MyCQRS.Utils
 {

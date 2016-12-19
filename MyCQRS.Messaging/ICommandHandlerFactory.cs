@@ -1,7 +1,7 @@
 ﻿using MyCQRS.CommandHandlers;
 using MyCQRS.Commands;
  
-namespace MyCQRS.Utils
+namespace MyCQRS.Messaging
 {
     public interface ICommandHandlerFactory
     {

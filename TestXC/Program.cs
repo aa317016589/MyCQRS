@@ -26,10 +26,11 @@ namespace TestXC
             //builder.RegisterType(typeof(AggregateRoot));
 
             builder.RegisterType<EventHandlerFactory>().As<IEventHandlerFactory>();
-            //builder.RegisterType<PostAddProcess>().As<IProcessBus>();
+            builder.RegisterType<ProcessFactory>().As<IProcessFactory>();
             builder.RegisterType<EventBus>().As<IEventBus>();
             builder.RegisterType<InMemoryEventStorage>().As<IEventStorage>();
             builder.RegisterGeneric(typeof(EventRepository<>)).As(typeof(IEventRepository<>)).InstancePerLifetimeScope();
+            // ReSharper disable once CoVariantArrayConversion
             builder.RegisterTypes(
                 typeof(ICommandHandler<>).Assembly.DefinedTypes.Where(
                     s => s.GetInterfaces().Any(a => a.Name == typeof(ICommandHandler<>).Name)).ToArray());

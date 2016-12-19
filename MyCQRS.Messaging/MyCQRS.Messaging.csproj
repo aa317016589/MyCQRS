@@ -43,9 +43,12 @@
     <Compile Include="CommandBus.cs" />
     <Compile Include="EventBus.cs" />
     <Compile Include="ICommandBus.cs" />
+    <Compile Include="ICommandHandlerFactory.cs" />
     <Compile Include="IEventBus.cs" />
-    <Compile Include="IProcessBus.cs" />
-    <Compile Include="PostAddProcess.cs" />
+    <Compile Include="IEventHandlerFactory.cs" />
+    <Compile Include="IProcess.cs" />
+    <Compile Include="IProcessFactory.cs" />
+    <Compile Include="ProcessManagers\PostAddProcess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -68,10 +71,6 @@
     <ProjectReference Include="..\MyCQRS.Exceptions\MyCQRS.Exceptions.csproj">
       <Project>{bb93db06-ce29-4165-a612-4d231dca4b0c}</Project>
       <Name>MyCQRS.Exceptions</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MyCQRS.Utils\MyCQRS.Utils.csproj">
-      <Project>{582dcbc0-3a43-4f39-b0fd-313aa658739c}</Project>
-      <Name>MyCQRS.Utils</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
