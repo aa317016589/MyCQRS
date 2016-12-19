@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChangeAccumulatePointEventHandle.cs" />
     <Compile Include="IEventHandler.cs" />
     <Compile Include="PostAddEventHandle.cs" />
     <Compile Include="PostDeleteEventHandle.cs" />

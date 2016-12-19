@@ -9,15 +9,22 @@ namespace MyCQRS.Web.Auxiliary
     /// </summary>
     public sealed class ServiceLocator
     {
-        public static ICommandBus CommandBus { get; private set; }
+        public static readonly ServiceLocator Current;
 
-        public static IEventBus EventBus { get; private set; }
+        static ServiceLocator()
+        {
+            Current = new ServiceLocator();
+        }
 
-        public static IMapper Mappers { get; private set; }
+        public ICommandBus CommandBus { get; private set; }
 
-        public static IContainer Container { get; private set; }
+        public IEventBus EventBus { get; private set; }
 
-        public static void Init(ContainerBuilder containerBuilder)
+        public IMapper Mappers { get; private set; }
+
+        public IContainer Container { get; private set; }
+
+        public void Init(ContainerBuilder containerBuilder)
         {
             ContainerBootstrapper.BootstrapStructureMap(containerBuilder);
             Container = containerBuilder.Build();

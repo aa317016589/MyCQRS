@@ -46,6 +46,7 @@
     <Compile Include="PostAddCommand.cs" />
     <Compile Include="PostEditCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserChangeAccumulatePointCommand.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MyCQRS.Domain\MyCQRS.Domain.csproj">

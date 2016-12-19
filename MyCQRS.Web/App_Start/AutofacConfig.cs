@@ -12,9 +12,9 @@ namespace MyCQRS.Web
         {
             var builder = new ContainerBuilder();
             builder.RegisterControllers(typeof(MvcApplication).Assembly);
-            ServiceLocator.Init(builder);            
-            DependencyResolver.SetResolver(new AutofacDependencyResolver(ServiceLocator.Container));
-            Duplicate.Create(ServiceLocator.Container);
+            ServiceLocator.Current.Init(builder);            
+            DependencyResolver.SetResolver(new AutofacDependencyResolver(ServiceLocator.Current.Container));
+            Duplicate.Create(ServiceLocator.Current.Container);
         }
     }
 }

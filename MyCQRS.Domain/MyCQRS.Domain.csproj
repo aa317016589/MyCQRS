@@ -43,6 +43,7 @@
     <Compile Include="Admin.cs" />
     <Compile Include="AggregateRoots\AggregateRoot.cs" />
     <Compile Include="AggregateRoots\PostAggregate.cs" />
+    <Compile Include="Events\ChangeAccumulatePointEvent.cs" />
     <Compile Include="Events\PostDeleteEvent.cs" />
     <Compile Include="Events\PostEditEvent.cs" />
     <Compile Include="AggregateRoots\UserAggregate.cs" />

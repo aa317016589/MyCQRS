@@ -45,6 +45,7 @@
     <Compile Include="PostDeleteCommandHandle.cs" />
     <Compile Include="PostEditCommandHandle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserChangeAccumulatePointCommandHandle.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MyCQRS.Commands\MyCQRS.Commands.csproj">
