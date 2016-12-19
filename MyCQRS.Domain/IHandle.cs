@@ -1,4 +1,6 @@
-﻿namespace MyCQRS.Domain
+﻿using MyCQRS.Domain.Events;
+
+namespace MyCQRS.Domain
 {
     public interface IHandle<TEvent> where TEvent : Event
     {

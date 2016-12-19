@@ -1,7 +1,7 @@
 ﻿using System;
 using MyCQRS.Domain;
 
-namespace MyCQRS.Domain
+namespace MyCQRS.Domain.Events
 {
     public interface IEventRepository<T> where T : AggregateRoot, new()
     {

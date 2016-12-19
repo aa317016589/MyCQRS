@@ -43,6 +43,8 @@
     <Compile Include="Admin.cs" />
     <Compile Include="AggregateRoots\AggregateRoot.cs" />
     <Compile Include="AggregateRoots\PostAggregate.cs" />
+    <Compile Include="Events\PostDeleteEvent.cs" />
+    <Compile Include="Events\PostEditEvent.cs" />
     <Compile Include="AggregateRoots\UserAggregate.cs" />
     <Compile Include="Entities\Post.cs" />
     <Compile Include="Entities\Reply.cs" />
@@ -55,7 +57,7 @@
     <Compile Include="IMessageHandler.cs" />
     <Compile Include="IRepositories.cs" />
     <Compile Include="Mementos\BaseMemento.cs" />
-    <Compile Include="PostAddEvent.cs" />
+    <Compile Include="Events\PostAddEvent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

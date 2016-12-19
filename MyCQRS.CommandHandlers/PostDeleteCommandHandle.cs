@@ -1,22 +1,20 @@
 ﻿using System;
 using MyCQRS.Commands;
-using MyCQRS.Domain;
 using MyCQRS.Domain.AggregateRoots;
 using MyCQRS.Domain.Events;
 
 namespace MyCQRS.CommandHandlers
 {
-    public class PostAddCommandHandler : ICommandHandler<PostAddCommand>
+    public class PostDeleteCommandHandle : ICommandHandler<PostDeleteCommand>
     {
         private readonly IEventRepository<PostAggregate> _eventRepository;
 
-        public PostAddCommandHandler(IEventRepository<PostAggregate> eventRepository)
+        public PostDeleteCommandHandle(IEventRepository<PostAggregate> eventRepository)
         {
             _eventRepository = eventRepository;
         }
- 
 
-        public void Execute(PostAddCommand command)
+        public void Execute(PostDeleteCommand command)
         {
             if (command == null)
             {
@@ -28,9 +26,9 @@ namespace MyCQRS.CommandHandlers
                 return;
             }
 
-            var aggregate = new PostAggregate(command.Id, command.PostDetail);
+            var aggregate = _eventRepository.GetById(command.Id);
 
-            aggregate.Version = command.Version;
+            aggregate.Delete();
 
             _eventRepository.Save(aggregate, aggregate.Version);
         }

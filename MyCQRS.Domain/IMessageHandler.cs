@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MyCQRS.Domain;
+using MyCQRS.Domain.Events;
 
 namespace MyCQRS.Domain
 {

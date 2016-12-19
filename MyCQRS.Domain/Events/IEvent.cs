@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MyCQRS.Domain
+namespace MyCQRS.Domain.Events
 {
     public interface IEvent
     {

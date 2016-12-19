@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using MyCQRS.Domain;
+using MyCQRS.Domain.Events;
 using MyCQRS.Domain.Mementos;
 
 namespace MyCQRS.Domain

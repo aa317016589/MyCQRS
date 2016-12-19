@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace MyCQRS.Domain
+namespace MyCQRS.Domain.Events
 {
     public interface IEventProvider
     {

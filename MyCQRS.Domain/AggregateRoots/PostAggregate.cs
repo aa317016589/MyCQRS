@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using MyCQRS.Domain.Entities;
+using MyCQRS.Domain.Events;
 
 
 namespace MyCQRS.Domain.AggregateRoots
@@ -11,7 +12,9 @@ namespace MyCQRS.Domain.AggregateRoots
     /// 帖子
     /// </summary>
     public class PostAggregate : AggregateRoot,
-        IHandle<PostAddEvent>
+        IHandle<PostAddEvent>,
+        IHandle<PostEditEvent>,
+        IHandle<PostDeleteEvent>
     {
         public Post PostDetail { get; set; }
 
@@ -28,13 +31,29 @@ namespace MyCQRS.Domain.AggregateRoots
 
         public PostAggregate()
         {
-            
+
+        }
+
+
+        public void Delete()
+        {
+            ApplyChange(new PostDeleteEvent(Id));
         }
 
 
         public void Handle(PostAddEvent e)
         {
             PostDetail = e.PostDetail;
+        }
+
+        public void Handle(PostEditEvent e)
+        {
+            PostDetail = e.PostDetail;
+        }
+
+        public void Handle(PostDeleteEvent e)
+        {
+
         }
     }
 }

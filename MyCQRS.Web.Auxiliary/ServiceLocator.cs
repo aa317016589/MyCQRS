@@ -15,9 +15,9 @@ namespace MyCQRS.Web.Auxiliary
 
         public static IMapper Mappers { get; private set; }
 
-        public static void Init()
+        public static void Init(ContainerBuilder containerBuilder)
         {
-            ContainerBuilder containerBuilder = ContainerBootstrapper.BootstrapStructureMap();
+            ContainerBootstrapper.BootstrapStructureMap(containerBuilder);
 
             var builder = containerBuilder.Build();
 

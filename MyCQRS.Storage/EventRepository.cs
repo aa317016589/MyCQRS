@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using MyCQRS.Domain;
+using MyCQRS.Domain.Events;
 using MyCQRS.Domain.Mementos;
 using MyCQRS.Storage.Mementos;
 using MyCQRS.Exceptions;

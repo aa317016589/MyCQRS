@@ -8,6 +8,7 @@ using MyCQRS.ApplicationHelper;
 using MyCQRS.CommandHandlers;
 using MyCQRS.Commands;
 using MyCQRS.Domain;
+using MyCQRS.Domain.Events;
 using MyCQRS.EventHandles;
 using MyCQRS.Messaging;
 using MyCQRS.QueryServices;
@@ -19,9 +20,9 @@ namespace MyCQRS.Web.Auxiliary
 {
     public static class ContainerBootstrapper
     {
-        public static ContainerBuilder BootstrapStructureMap()
+        public static void BootstrapStructureMap(ContainerBuilder builder)
         {
-            var builder = new ContainerBuilder();
+    
             builder.RegisterType<InMemoryEventStorage>().As<IEventStorage>();
             builder.RegisterGeneric(typeof(EventRepository<>)).As(typeof(IEventRepository<>)).InstancePerLifetimeScope();
             // ReSharper disable once CoVariantArrayConversion
@@ -47,8 +48,7 @@ namespace MyCQRS.Web.Auxiliary
 
 
             builder.RegisterType<Mapper>().As<IMapper>();
-
-            return builder;
+ 
 
             //builder.RegisterType<IEventBus>()
             //au.Initialize(x =>
