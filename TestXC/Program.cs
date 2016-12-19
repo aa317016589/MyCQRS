@@ -22,10 +22,6 @@ namespace TestXC
     {
         static void Main(string[] args)
         {
- 
-
-
-
             var builder = new ContainerBuilder();
             //builder.RegisterType(typeof(AggregateRoot));
 

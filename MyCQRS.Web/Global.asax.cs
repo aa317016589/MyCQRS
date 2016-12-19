@@ -21,5 +21,7 @@ namespace MyCQRS.Web
 
             AutofacConfig.Register();
         }
+
+
     }
 }

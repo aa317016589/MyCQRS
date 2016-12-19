@@ -1,6 +1,7 @@
 ﻿using System.Web.Mvc;
 using Autofac;
 using Autofac.Integration.Mvc;
+using MyCQRS.ApplicationHelper;
 using MyCQRS.Web.Auxiliary;
 
 namespace MyCQRS.Web
@@ -11,8 +12,9 @@ namespace MyCQRS.Web
         {
             var builder = new ContainerBuilder();
             builder.RegisterControllers(typeof(MvcApplication).Assembly);
-            ServiceLocator.Init(builder);
+            ServiceLocator.Init(builder);            
             DependencyResolver.SetResolver(new AutofacDependencyResolver(ServiceLocator.Container));
+            Duplicate.Create(ServiceLocator.Container);
         }
     }
 }

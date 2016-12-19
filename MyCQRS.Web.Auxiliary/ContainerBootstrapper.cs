@@ -41,20 +41,8 @@ namespace MyCQRS.Web.Auxiliary
             builder.RegisterTypes(typeof (IEventHandler<>).Assembly.DefinedTypes.Where(
                 s => s.GetInterfaces().Any(a => a.Name == typeof (IEventHandler<>).Name)).ToArray());
 
-
-
-
-            
-            
-            
-            
-
-
-
-
+        
             builder.RegisterType<PostQueryServices>().As<IPostQueryServices>();
-
-
             builder.RegisterType<Mapper>().As<IMapper>();
  
 

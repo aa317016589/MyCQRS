@@ -20,15 +20,10 @@ namespace MyCQRS.Web.Auxiliary
         public static void Init(ContainerBuilder containerBuilder)
         {
             ContainerBootstrapper.BootstrapStructureMap(containerBuilder);
-
             Container = containerBuilder.Build();
-
-             
-            Duplicate.Create(Container);
             CommandBus = Container.Resolve<ICommandBus>();
             EventBus = Container.Resolve<IEventBus>();
             Mappers = Container.Resolve<IMapper>();
- 
         }
     }
 }
