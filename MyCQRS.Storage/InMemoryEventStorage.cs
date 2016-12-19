@@ -14,7 +14,7 @@ namespace MyCQRS.Storage
     public class InMemoryEventStorage : IEventStorage
     {
         private readonly List<Event> _events;
-        private readonly List<BaseMemento> _mementos;
+        private readonly List<BaseMemento> _mementos; //快照
         private readonly IEventBus _eventBus;
 
 

@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="AggregateRoots\AggregateRoot.cs" />
     <Compile Include="AggregateRoots\PostAggregate.cs" />
+    <Compile Include="Entities\User.cs" />
     <Compile Include="Events\ChangeAccumulatePointEvent.cs" />
     <Compile Include="Events\PostDeleteEvent.cs" />
     <Compile Include="Events\PostEditEvent.cs" />
@@ -52,6 +53,7 @@
     <Compile Include="Events\IEvent.cs" />
     <Compile Include="Events\IEventProvider.cs" />
     <Compile Include="Events\IEventRepository.cs" />
+    <Compile Include="Events\UserAddEvent.cs" />
     <Compile Include="IEventStorage.cs" />
     <Compile Include="IHandle.cs" />
     <Compile Include="IRepositories.cs" />

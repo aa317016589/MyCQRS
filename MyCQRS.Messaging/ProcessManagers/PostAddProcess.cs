@@ -17,7 +17,7 @@ namespace MyCQRS.Messaging.ProcessManagers
   
         public void HandleAsync(PostAddEvent @event)
         {
-            CommandBus.Send(new UserChangeAccumulatePointCommand(@event.Id, @event.Version, 1));
+            CommandBus.Send(new UserChangeAccumulatePointCommand(@event.PostDetail.UserId, @event.Version, 1));
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using MyCQRS.ApplicationHelper;
 using MyCQRS.Domain.Events;
 
@@ -52,7 +53,13 @@ namespace MyCQRS.Domain
 
         public void LoadsFromHistory(IEnumerable<Event> history)
         {
-            throw new NotImplementedException();
+            foreach (var e in history)
+            {
+                ApplyChange(e, false);
+            }
+
+            Version = history.Last().Version;
+            EventVersion = Version;
         }
 
     }

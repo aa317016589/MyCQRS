@@ -5,10 +5,10 @@ using MyCQRS.Domain.Events;
 
 namespace MyCQRS.EventHandles
 {
-    public class ChangeAccumulatePointEventHandle : IEventHandler<ChangeAccumulatePointEvent>
+    public class UserChangeAccumulatePointEventHandle : IEventHandler<ChangeAccumulatePointEvent>
     {
-        private readonly IRepositories<Post> _reportDatabase;
-        public ChangeAccumulatePointEventHandle(IRepositories<Post> reportDatabase)
+        private readonly IRepositories<User> _reportDatabase;
+        public UserChangeAccumulatePointEventHandle(IRepositories<User> reportDatabase)
         {
             _reportDatabase = reportDatabase;
         }
