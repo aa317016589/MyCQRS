@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Linq;
 using MyCQRS.QueryServices.DTOs;
 using Dapper;
 using Dapper.Contrib.Extensions;
@@ -14,7 +15,7 @@ namespace MyCQRS.QueryServices.Dapper
         {
             using (var conn = GetConnection())
             {
-                return conn.Query<PostQueryEntity>();
+                return conn.Query<PostQueryEntity>().ToList();
             }
         }
     }

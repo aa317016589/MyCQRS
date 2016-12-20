@@ -681,15 +681,15 @@ namespace Dapper.Contrib.Extensions
         }
     }
 
-    [AttributeUsage(AttributeTargets.Class)]
-    public class TableAttribute : Attribute
-    {
-        public TableAttribute(string tableName)
-        {
-            Name = tableName;
-        }
-        public string Name { get; private set; }
-    }
+    //[AttributeUsage(AttributeTargets.Class)]
+    //public class TableAttribute : Attribute
+    //{
+    //    public TableAttribute(string tableName)
+    //    {
+    //        Name = tableName;
+    //    }
+    //    public string Name { get; private set; }
+    //}
 
     // do not want to depend on data annotations that is not in client profile
     [AttributeUsage(AttributeTargets.Property)]

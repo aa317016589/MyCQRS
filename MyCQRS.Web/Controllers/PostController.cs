@@ -7,6 +7,8 @@ using Autofac;
 using MyCQRS.ApplicationHelper;
 using MyCQRS.Commands;
 using MyCQRS.Domain.Entities;
+using MyCQRS.QueryServices;
+using MyCQRS.QueryServices.DTOs;
 using MyCQRS.Web.Auxiliary;
 using MyCQRS.Web.Models;
 
@@ -14,9 +16,17 @@ namespace MyCQRS.Web.Controllers
 {
     public class PostController : Controller
     {
-        // GET: Post
+        private readonly IPostQueryServices _postQueryServices;
+
+        public PostController(IPostQueryServices postQueryServices)
+        {
+            _postQueryServices = postQueryServices;
+        }
+
         public ActionResult Index()
         {
+            IEnumerable<PostQueryEntity> postsEntities = _postQueryServices.GetPosts().ToList();
+
             return View();
         }
 
@@ -25,10 +35,10 @@ namespace MyCQRS.Web.Controllers
         {
             Post post = ServiceLocator.Current.Container.Resolve<IMapper>().Map<Post>(postViewModel);
 
-            post.UserId= Guid.NewGuid();
+            post.UserId = Guid.NewGuid();
 
             ServiceLocator.Current.CommandBus.Send(new PostAddCommand(post.PostId, -1, post));
- 
+
             return View();
         }
 
@@ -42,7 +52,7 @@ namespace MyCQRS.Web.Controllers
         {
             return View();
         }
- 
+
 
         public ActionResult Delete(String id)
         {
