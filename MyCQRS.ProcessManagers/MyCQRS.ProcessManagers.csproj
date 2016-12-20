@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{17867701-19D9-412D-9E25-070DD63C168E}</ProjectGuid>
+    <ProjectGuid>{88D1A0CF-B8A8-400F-AD75-213C425FC198}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MyCQRS.CommandHandlers</RootNamespace>
-    <AssemblyName>MyCQRS.CommandHandlers</AssemblyName>
+    <RootNamespace>MyCQRS.ProcessManagers</RootNamespace>
+    <AssemblyName>MyCQRS.ProcessManagers</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -40,10 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ICommandHandler.cs" />
-    <Compile Include="PostHandle.cs" />
+    <Compile Include="PostAddProcess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UserHandle.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MyCQRS.Commands\MyCQRS.Commands.csproj">
@@ -54,9 +52,9 @@
       <Project>{410e5f86-c137-45d8-8800-8ccd65a9c6f9}</Project>
       <Name>MyCQRS.Domain</Name>
     </ProjectReference>
-    <ProjectReference Include="..\MyCQRS.Mementos\MyCQRS.Mementos.csproj">
-      <Project>{1a950cb6-fae5-43c1-b454-428daf75c862}</Project>
-      <Name>MyCQRS.Mementos</Name>
+    <ProjectReference Include="..\MyCQRS.Messaging\MyCQRS.Messaging.csproj">
+      <Project>{e45f6f07-5333-43b8-b238-e1aab497e97c}</Project>
+      <Name>MyCQRS.Messaging</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

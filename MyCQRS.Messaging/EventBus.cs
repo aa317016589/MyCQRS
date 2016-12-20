@@ -8,12 +8,12 @@ namespace MyCQRS.Messaging
     {
         private readonly IEventHandlerFactory _eventHandlerFactory;
 
-        private readonly IProcessFactory _processFactory;
+        private readonly IProcessBus _processBus;
 
-        public EventBus(IEventHandlerFactory eventHandlerFactory, IProcessFactory processFactory)
+        public EventBus(IEventHandlerFactory eventHandlerFactory, IProcessBus processBus)
         {
             _eventHandlerFactory = eventHandlerFactory;
-            _processFactory = processFactory;
+            _processBus = processBus;
         }
 
         public void Publish<T>(T @event) where T : Event
@@ -24,7 +24,7 @@ namespace MyCQRS.Messaging
                 eventHandler.Handle(@event);
 
                 //搜寻该事件的后续操作，即不属于该聚合根的操作，由 _processFactory找到对应的Process 重新产生 command 发送
-                _processFactory.Process<T>()?.HandleAsync(@event);
+                _processBus.Handle(@event);
             }
         }
     }
