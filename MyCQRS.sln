@@ -35,6 +35,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Linq2Dapper", "Linq2Dapper\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyCQRS.Mementos", "MyCQRS.Mementos\MyCQRS.Mementos.csproj", "{1A950CB6-FAE5-43C1-B454-428DAF75C862}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyCQRS.ProcessManagers", "MyCQRS.ProcessManagers\MyCQRS.ProcessManagers.csproj", "{88D1A0CF-B8A8-400F-AD75-213C425FC198}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -105,6 +107,10 @@ Global
 		{1A950CB6-FAE5-43C1-B454-428DAF75C862}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A950CB6-FAE5-43C1-B454-428DAF75C862}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A950CB6-FAE5-43C1-B454-428DAF75C862}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88D1A0CF-B8A8-400F-AD75-213C425FC198}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88D1A0CF-B8A8-400F-AD75-213C425FC198}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88D1A0CF-B8A8-400F-AD75-213C425FC198}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88D1A0CF-B8A8-400F-AD75-213C425FC198}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

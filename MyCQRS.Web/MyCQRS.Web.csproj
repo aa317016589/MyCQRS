@@ -220,6 +220,10 @@
       <Project>{e45f6f07-5333-43b8-b238-e1aab497e97c}</Project>
       <Name>MyCQRS.Messaging</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MyCQRS.ProcessManagers\MyCQRS.ProcessManagers.csproj">
+      <Project>{88d1a0cf-b8a8-400f-ad75-213c425fc198}</Project>
+      <Name>MyCQRS.ProcessManagers</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MyCQRS.QueryServices\MyCQRS.QueryServices.csproj">
       <Project>{cfe30188-e836-43ec-aaf3-e7e9db97099a}</Project>
       <Name>MyCQRS.QueryServices</Name>

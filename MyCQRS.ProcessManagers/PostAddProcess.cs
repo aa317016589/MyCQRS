@@ -4,7 +4,7 @@ using MyCQRS.Domain;
 using MyCQRS.Domain.Events;
 using MyCQRS.Messaging;
 
-namespace MyCQRS.Messaging.ProcessManagers
+namespace MyCQRS.ProcessManagers
 {
     public class PostAddProcess : IProcess<PostAddEvent>
     {

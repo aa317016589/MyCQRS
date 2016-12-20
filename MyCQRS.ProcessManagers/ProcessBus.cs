@@ -1,7 +1,8 @@
 ﻿using System;
 using MyCQRS.Domain.Events;
+using MyCQRS.Messaging;
 
-namespace MyCQRS.Messaging
+namespace MyCQRS.ProcessManagers
 {
     public class ProcessBus : IProcessBus
     {

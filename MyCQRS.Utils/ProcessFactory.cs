@@ -3,6 +3,7 @@ using System.Linq;
 using MyCQRS.ApplicationHelper;
 using MyCQRS.Domain.Events;
 using MyCQRS.Messaging;
+using MyCQRS.ProcessManagers;
 
 namespace MyCQRS.Utils
 {

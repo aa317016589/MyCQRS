@@ -11,6 +11,7 @@ using MyCQRS.Domain;
 using MyCQRS.Domain.Events;
 using MyCQRS.EventHandles;
 using MyCQRS.Messaging;
+using MyCQRS.ProcessManagers;
 using MyCQRS.QueryServices;
 using MyCQRS.QueryServices.Dapper;
 using MyCQRS.Storage;

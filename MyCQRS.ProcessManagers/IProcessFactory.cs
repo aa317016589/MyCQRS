@@ -2,7 +2,7 @@
 using MyCQRS.Domain.Events;
  
 
-namespace MyCQRS.Messaging
+namespace MyCQRS.ProcessManagers
 {
     public interface IProcessFactory
     {

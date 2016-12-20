@@ -4,7 +4,6 @@ using System.Linq;
 using MyCQRS.ApplicationHelper;
 using MyCQRS.Domain;
 using MyCQRS.Domain.Events;
-
 using MyCQRS.Exceptions;
 using MyCQRS.Mementos;
 using MyCQRS.Messaging;

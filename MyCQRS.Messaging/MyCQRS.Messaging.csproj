@@ -46,11 +46,7 @@
     <Compile Include="ICommandHandlerFactory.cs" />
     <Compile Include="IEventBus.cs" />
     <Compile Include="IEventHandlerFactory.cs" />
-    <Compile Include="IProcess.cs" />
     <Compile Include="IProcessBus.cs" />
-    <Compile Include="IProcessFactory.cs" />
-    <Compile Include="ProcessBus.cs" />
-    <Compile Include="ProcessManagers\PostAddProcess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

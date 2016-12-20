@@ -12,6 +12,7 @@ using MyCQRS.Domain.AggregateRoots;
 using MyCQRS.Domain.Events;
 using MyCQRS.EventHandles;
 using MyCQRS.Messaging;
+using MyCQRS.ProcessManagers;
 using MyCQRS.Storage;
 using MyCQRS.Utils;
 using MyCQRS.Web.Auxiliary;
