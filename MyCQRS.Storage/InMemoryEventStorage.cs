@@ -4,10 +4,11 @@ using System.Linq;
 using MyCQRS.ApplicationHelper;
 using MyCQRS.Domain;
 using MyCQRS.Domain.Events;
-using MyCQRS.Domain.Mementos;
+
 using MyCQRS.Exceptions;
+using MyCQRS.Mementos;
 using MyCQRS.Messaging;
-using MyCQRS.Storage.Mementos;
+
 
 namespace MyCQRS.Storage
 {
@@ -85,5 +86,6 @@ namespace MyCQRS.Storage
         {
             _mementos.Add(memento);
         }
+
     }
 }

@@ -16,5 +16,10 @@ namespace MyCQRS.Domain.Entities
         /// 积分
         /// </summary>
         public Int32 AccumulatePoint { get; set; }
+
+        public User()
+        {
+            UserId= Guid.NewGuid();
+        }
     }
 }

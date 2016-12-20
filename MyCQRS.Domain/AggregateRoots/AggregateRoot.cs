@@ -32,6 +32,8 @@ namespace MyCQRS.Domain
             _changes.Clear();
         }
 
+
+
         protected void ApplyChange(Event @event)
         {
             ApplyChange(@event, true);
@@ -61,6 +63,5 @@ namespace MyCQRS.Domain
             Version = history.Last().Version;
             EventVersion = Version;
         }
-
     }
 }

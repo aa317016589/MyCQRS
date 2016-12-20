@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using MyCQRS.Domain.Mementos;
+ 
 
-namespace MyCQRS.Storage.Mementos
+namespace MyCQRS.Mementos
 {
     public interface IOriginator
     {

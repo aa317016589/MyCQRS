@@ -3,16 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using MyCQRS.Domain;
 using MyCQRS.Domain.Events;
-using MyCQRS.Domain.Mementos;
-using MyCQRS.Storage.Mementos;
 using MyCQRS.Exceptions;
+using MyCQRS.Mementos;
 
 namespace MyCQRS.Storage
 {
     public class EventRepository<T> : IEventRepository<T> where T : AggregateRoot, new()
     {
         private readonly IEventStorage _storage;
-        private static object _lockStorage = new object();
+        private static readonly object _lockStorage = new object();
 
         public EventRepository(IEventStorage storage)
         {
@@ -34,7 +33,7 @@ namespace MyCQRS.Storage
             }
             var obj = new T();
             if (memento != null)
-                ((IOriginator) obj).SetMemento(memento);
+                ((IOriginator)obj).SetMemento(memento);
 
             obj.LoadsFromHistory(events);
             return obj;

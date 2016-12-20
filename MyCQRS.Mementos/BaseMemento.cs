@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace MyCQRS.Domain.Mementos
+namespace MyCQRS.Mementos
 {
     public class BaseMemento
     {
-        public Guid Id { get; internal set; }
+        public Guid Id { get; protected set; }
         public int Version { get; set; }
     }
 }

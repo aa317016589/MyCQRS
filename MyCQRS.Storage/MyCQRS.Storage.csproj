@@ -43,8 +43,6 @@
     <Compile Include="EventRepository.cs" />
     <Compile Include="InMemoryEventStorage.cs" />
     <Compile Include="Repositories.cs" />
-    <Compile Include="Mementos\IOriginator.cs" />
-    <Compile Include="Mementos\Memento.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -63,6 +61,10 @@
     <ProjectReference Include="..\MyCQRS.Exceptions\MyCQRS.Exceptions.csproj">
       <Project>{BB93DB06-CE29-4165-A612-4D231DCA4B0C}</Project>
       <Name>MyCQRS.Exceptions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MyCQRS.Mementos\MyCQRS.Mementos.csproj">
+      <Project>{1a950cb6-fae5-43c1-b454-428daf75c862}</Project>
+      <Name>MyCQRS.Mementos</Name>
     </ProjectReference>
     <ProjectReference Include="..\MyCQRS.Messaging\MyCQRS.Messaging.csproj">
       <Project>{e45f6f07-5333-43b8-b238-e1aab497e97c}</Project>

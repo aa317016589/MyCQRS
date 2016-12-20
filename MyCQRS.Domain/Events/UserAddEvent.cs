@@ -18,6 +18,7 @@ namespace MyCQRS.Domain.Events
         public UserAddEvent(Guid aggregateId, String userName)
         {
             AggregateId = aggregateId;
+            Id = aggregateId;
             UserName = userName;
             //AccumulatePoint = 0;
         }

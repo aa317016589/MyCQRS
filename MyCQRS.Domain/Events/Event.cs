@@ -7,6 +7,6 @@ namespace MyCQRS.Domain.Events
     {
         public int Version;
         public Guid AggregateId { get; set; }
-        public Guid Id { get; private set; }
+        public Guid Id { get; protected set; }
     }
 }

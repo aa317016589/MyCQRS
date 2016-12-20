@@ -57,8 +57,8 @@
     <Compile Include="IEventStorage.cs" />
     <Compile Include="IHandle.cs" />
     <Compile Include="IRepositories.cs" />
-    <Compile Include="Mementos\BaseMemento.cs" />
     <Compile Include="Events\PostAddEvent.cs" />
+    <Compile Include="Mementos\PostMemento.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -66,7 +66,12 @@
       <Project>{d6228289-060d-4582-adf0-d9e8f4701486}</Project>
       <Name>MyCQRS.ApplicationHelper</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MyCQRS.Mementos\MyCQRS.Mementos.csproj">
+      <Project>{1a950cb6-fae5-43c1-b454-428daf75c862}</Project>
+      <Name>MyCQRS.Mementos</Name>
+    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
