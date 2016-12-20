@@ -83,10 +83,6 @@
       <Project>{e45f6f07-5333-43b8-b238-e1aab497e97c}</Project>
       <Name>MyCQRS.Messaging</Name>
     </ProjectReference>
-    <ProjectReference Include="..\MyCQRS.ProcessManagers\MyCQRS.ProcessManagers.csproj">
-      <Project>{64833366-377a-4897-ac31-d4bcc6ab4f31}</Project>
-      <Name>MyCQRS.ProcessManagers</Name>
-    </ProjectReference>
     <ProjectReference Include="..\MyCQRS.QueryServices\MyCQRS.QueryServices.csproj">
       <Project>{cfe30188-e836-43ec-aaf3-e7e9db97099a}</Project>
       <Name>MyCQRS.QueryServices</Name>
