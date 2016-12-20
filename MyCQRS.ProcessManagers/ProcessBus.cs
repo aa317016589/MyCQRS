@@ -20,7 +20,7 @@ namespace MyCQRS.ProcessManagers
 
         public void Handle<T>(T @event) where T : Event
         {
-            _processFactory.Process<T>()?.HandleAsync(@event, _commandBus);
+            _processFactory.Process<T>()?.Process(@event, _commandBus);
         }
     }
 }

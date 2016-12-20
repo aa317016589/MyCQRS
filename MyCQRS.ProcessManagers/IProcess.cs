@@ -8,6 +8,6 @@ namespace MyCQRS.ProcessManagers
     public interface IProcess<T>
         where T : Event
     {
-        void HandleAsync(T @event, ICommandBus commandBus);
+        void Process(T @event, ICommandBus commandBus);
     }
 }
