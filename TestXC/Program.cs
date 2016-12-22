@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Autofac;
+using Dapper.Contrib.Linq2Dapper;
+using Dapper.Contrib.Linq2Dapper.Extensions;
 using MyCQRS.ApplicationHelper;
 using MyCQRS.CommandHandlers;
 using MyCQRS.Domain;
@@ -23,42 +27,75 @@ namespace TestXC
     {
         static void Main(string[] args)
         {
-            var builder = new ContainerBuilder();
-            //builder.RegisterType(typeof(AggregateRoot));
+            TableMap.Config<PostXC>("Post").Map(s => s.Id, "PostId").Key(s => s.Id).Ignore(s => s.Content);
 
-            builder.RegisterType<EventHandlerFactory>().As<IEventHandlerFactory>();
-            builder.RegisterType<ProcessFactory>().As<IProcessFactory>();
-            builder.RegisterType<EventBus>().As<IEventBus>();
-            builder.RegisterType<InMemoryEventStorage>().As<IEventStorage>();
-            builder.RegisterGeneric(typeof(EventRepository<>)).As(typeof(IEventRepository<>)).InstancePerLifetimeScope();
-            // ReSharper disable once CoVariantArrayConversion
-            builder.RegisterTypes(
-                typeof(ICommandHandler<>).Assembly.DefinedTypes.Where(
-                    s => s.GetInterfaces().Any(a => a.Name == typeof(ICommandHandler<>).Name)).ToArray());
-
-
-            builder.RegisterGeneric(typeof(Repositories<>)).As(typeof(IRepositories<>)).InstancePerLifetimeScope();
-            // ReSharper disable once CoVariantArrayConversion
-            builder.RegisterTypes(typeof(IEventHandler<>).Assembly.DefinedTypes.Where(
-                s => s.GetInterfaces().Any(a => a.Name == typeof(IEventHandler<>).Name)).ToArray());
-
-            //builder.RegisterType<InMemoryEventStorage>().As<IEventStorage>();
-            //builder.RegisterType<EventRepository<PostAggregate>>().As<IEventRepository<PostAggregate>>();
-            //builder.RegisterType<PostAddCommandHandler>().PropertiesAutowired();
-
-
-            //builder.RegisterGeneric(typeof(EventRepository<>)).As(typeof(IEventRepository<>)).InstancePerLifetimeScope();
-
-
-
-            using (var  b = builder.Build())
+            using (var conn = GetConnection())
             {
-                b.Resolve(typeof(PostAddEventHandle));
+                var posts = conn.Query<PostXC>().ToList();
+                Console.WriteLine(posts.Count);
+                posts.ForEach(s =>
+                {
+                    Console.WriteLine(s.Id);
+                });
             }
 
-        
+ 
+            using (var conn = GetConnection())
+            {
+                var posts = conn.Query<PostXC>().ToList();
+                Console.WriteLine(posts.Count);
+                posts.ForEach(s =>
+                {
+                    Console.WriteLine(s.Id);
+                });
+            }
 
             Console.ReadKey();
         }
+
+        static IDbConnection GetConnection()
+        {
+            return new SqlConnection("Data Source=.;Initial Catalog=MyCQRS;User Id=sa;Password=sxf2013;multipleactiveresultsets=True;");
+        }
+    }
+
+
+    public class PostXC
+    {
+
+        public Guid Id { get; set; }
+
+        public String Title { get; set; }
+
+        /// <summary>
+        /// 内容
+        /// </summary>
+        // ReSharper disable once BuiltInTypeReferenceStyle
+        public String Content { get; set; }
+
+        /// <summary>
+        /// 回复数
+        /// </summary>
+        public Int32 ReplyCount { get; set; }
+
+        /// <summary>
+        /// 点赞数
+        /// </summary>
+        public Int32 GreatCount { get; set; }
+
+        /// <summary>
+        /// 阅读次数
+        /// </summary>
+        public Int32 ReadCount { get; set; }
+
+        /// <summary>
+        /// 发帖人
+        /// </summary>
+        public Guid UserId { get; set; }
+
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        public DateTime CreateDateTime { get; set; }
     }
 }

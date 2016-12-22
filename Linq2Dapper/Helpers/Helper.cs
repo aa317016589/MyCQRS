@@ -5,7 +5,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Dapper.Contrib.Extensions;
-using TableAttribute = System.ComponentModel.DataAnnotations.Schema.TableAttribute;
 
 // ReSharper disable once CheckNamespace
 namespace Dapper.Contrib.Linq2Dapper.Helpers
@@ -268,34 +267,69 @@ namespace Dapper.Contrib.Linq2Dapper.Helpers
             var table = CacheHelper.TryGetTable(type);
             if (table.Name != null) return table; // have table in cache
 
+            if (!TableMap.Configs.ContainsKey(type))
+            {
+                TableMap.Configs.Add(type, TableConfig.CreateTableConfig(type).InitMap());
+            }
+
+            var properties = TableMap.Configs[type].RecordRowConfigs.ToDictionary(k => k.ModelPropertyName,
+    v => v.TargetPropertyName);
+
             // get properties add to cache
-            var properties = new Dictionary<string, string>();
-            type.GetProperties().ToList().ForEach(
-                    x =>
-                    {
-                        var write = (WriteAttribute)x.GetCustomAttribute(typeof(WriteAttribute));
-
-                        if (write != null && !write.Write)
-                        {
-                            return;
-                        }
+            //var properties = new Dictionary<string, string>();
 
 
-                        var col = (ColumnAttribute)x.GetCustomAttribute(typeof(ColumnAttribute));
+            //type.GetProperties().ToList().ForEach(
+            //        x =>
+            //        {
+            //            var recordRowConfig =
+            //                TableMap.Configs[type].RecordRowConfigs.SingleOrDefault(s => s.ModelProperty == x);
 
-                        properties.Add(x.Name, (col != null) ? col.Name : x.Name);
-                    }
-                );
+            //            if (recordRowConfig == null)
+            //            {
+            //                return;
+            //            }
+
+            //            properties.Add(x.Name, recordRowConfig.TargetPropertyName);
 
 
-            var attrib = (TableAttribute)type.GetCustomAttribute(typeof(TableAttribute));
+            //            //var write = (WriteAttribute)x.GetCustomAttribute(typeof(WriteAttribute));
+
+            //            //if (write != null && !write.Write)
+            //            //{
+            //            //    return;
+            //            //}
+
+
+            //            // var col = (ColumnAttribute)x.GetCustomAttribute(typeof(ColumnAttribute));
+
+            //            //properties.Add(x.Name, (col != null) ? col.Name : x.Name);
+            //        }
+            //    );
+
+
+            //var attrib = (TableAttribute)type.GetCustomAttribute(typeof(TableAttribute));
+
+            //table = new TableHelper
+            //{
+            //    Name = (attrib != null ? attrib.Name : type.Name),
+            //    Columns = properties,
+            //    Identifier = string.Format("t{0}", CacheHelper.Size + 1)
+            //};
+
+
+
+
+
+
 
             table = new TableHelper
             {
-                Name = (attrib != null ? attrib.Name : type.Name),
+                Name = TableMap.Configs[type].TableName,
                 Columns = properties,
                 Identifier = string.Format("t{0}", CacheHelper.Size + 1)
             };
+
             CacheHelper.TryAddTable(type, table);
 
             return table;

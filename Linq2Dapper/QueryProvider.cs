@@ -62,8 +62,6 @@ namespace Dapper.Contrib.Linq2Dapper
                 _qb.Evaluate(expression);
                 var data = _connection.Query<TData>(_qb.Sql, _qb.Parameters);
 
-
-
                 if (isEnumerable)
                     return data;
 

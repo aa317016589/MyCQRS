@@ -1,27 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using Dapper.Contrib.Extensions;
 using MyCQRS.Domain;
+using Dapper.Contrib.Extensions;
+using Dapper.Contrib.Linq2Dapper.Extensions;
+using Dapper;
 
 namespace MyCQRS.Storage
 {
-    public class Repositories<T> : IRepositories<T>
+    public class Repositories<T> : IRepositories<T> where T : class
     {
+        protected IDbConnection GetConnection()
+        {
+            return new SqlConnection("Data Source=.;Initial Catalog=MyCQRS;User Id=sa;Password=sxf2013;multipleactiveresultsets=True;");
+        }
+
         public void Add(T item)
         {
-            throw new NotImplementedException();
+            using (var conn = GetConnection())
+            {
+                conn.Insert(item);
+            }
         }
 
         public void Delete(Guid id)
         {
-            throw new NotImplementedException();
+            //using (var conn = GetConnection())
+            //{
+            //    conn.Delete(null);
+            //}
         }
 
-        public T GetById(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<T> GetItems()
+        public void Update(T item)
         {
             throw new NotImplementedException();
         }

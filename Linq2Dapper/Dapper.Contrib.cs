@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Runtime.CompilerServices;
 using Dapper;
+using Dapper.Contrib.Linq2Dapper;
 
 #pragma warning disable 1573, 1591 // xml comments
 // ReSharper disable once CheckNamespace
@@ -50,19 +51,21 @@ namespace Dapper.Contrib.Extensions
         }
         private static IEnumerable<PropertyInfo> KeyPropertiesCache(Type type)
         {
+            var keyProperties = TableMap.Configs[type].RecordRowConfigs.Where(s => s.IsKey).Select(s => s.ModelProperty).ToList();
+            //IEnumerable<PropertyInfo> pi;
+            //if (KeyProperties.TryGetValue(type.TypeHandle, out pi))
+            //{
+            //    return pi;
+            //}
 
-            IEnumerable<PropertyInfo> pi;
-            if (KeyProperties.TryGetValue(type.TypeHandle, out pi))
+            
+            //var keyProperties = allProperties.Where(p => p.GetCustomAttributes(true).Any(a => a is KeyAttribute)).ToList();
+
+            if (!keyProperties.Any())
             {
-                return pi;
-            }
+                var allProperties = TypePropertiesCache(type);
 
-            var allProperties = TypePropertiesCache(type);
-            var keyProperties = allProperties.Where(p => p.GetCustomAttributes(true).Any(a => a is KeyAttribute)).ToList();
-
-            if (keyProperties.Count == 0)
-            {
-                var idProp = allProperties.Where(p => p.Name.ToLower() == "id").FirstOrDefault();
+                var idProp = allProperties.FirstOrDefault(p => p.Name.ToLower() == "id");
                 if (idProp != null)
                 {
                     keyProperties.Add(idProp);
@@ -429,7 +432,7 @@ namespace Dapper.Contrib.Extensions
             var type = typeof(T);
 
             var keyProperties = KeyPropertiesCache(type);
-            if (keyProperties.Count() == 0)
+            if (!keyProperties.Any())
                 throw new ArgumentException("Entity must have at least one [Key] property");
 
             var name = GetTableName(type);
