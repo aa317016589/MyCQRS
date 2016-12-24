@@ -1,9 +1,10 @@
-﻿using MyCQRS.Domain.Events;
+﻿using System.Threading.Tasks;
+using MyCQRS.Domain.Events;
 
 namespace MyCQRS.Messaging
 {
     public interface IProcessBus
     {
-        void Handle<T>(T @event) where T : Event;
+        Task HandleAsync<T>(T @event) where T : Event;
     }
 }

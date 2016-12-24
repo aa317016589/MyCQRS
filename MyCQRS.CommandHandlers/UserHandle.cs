@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using MyCQRS.Commands;
 using MyCQRS.Domain.AggregateRoots;
 using MyCQRS.Domain.Events;
@@ -16,7 +17,7 @@ namespace MyCQRS.CommandHandlers
             _eventRepository = eventRepository;
         }
 
-        public void Execute(UserAddCommand command)
+        public async Task ExecuteAsYnc(UserAddCommand command)
         {
             if (command == null)
             {
@@ -32,10 +33,10 @@ namespace MyCQRS.CommandHandlers
 
             aggregate.Version = command.Version;
 
-            _eventRepository.Save(aggregate, aggregate.Version);
+           await _eventRepository.SaveAsync(aggregate, aggregate.Version);
         }
 
-        public void Execute(UserChangeAccumulatePointCommand command)
+        public async Task ExecuteAsYnc(UserChangeAccumulatePointCommand command)
         {
             if (command == null)
             {
@@ -51,7 +52,7 @@ namespace MyCQRS.CommandHandlers
 
             aggregate.ChangeAccumulatePoint(command.ChangeAccumulatePoint);
 
-            _eventRepository.Save(aggregate, aggregate.Version);
+           await _eventRepository.SaveAsync(aggregate, aggregate.Version);
         }
     }
 }

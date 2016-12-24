@@ -1,9 +1,10 @@
-﻿using MyCQRS.Commands;
+﻿using System.Threading.Tasks;
+using MyCQRS.Commands;
 
 namespace MyCQRS.Messaging
 {
     public interface ICommandBus
     {
-        void Send<T>(T command) where T : Command;
+        Task SendAsync<T>(T command) where T : Command;
     }
 }

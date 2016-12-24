@@ -17,6 +17,7 @@ namespace MyCQRS.EventHandles
         public void Handle(PostAddEvent handle)
         {
             //数据库操作 
+            _reportDatabase.Add(handle.PostDetail);
         }
     }
 }

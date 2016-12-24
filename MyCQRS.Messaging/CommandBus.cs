@@ -1,6 +1,7 @@
-﻿using MyCQRS.Commands;
+﻿using System.Threading.Tasks;
+using MyCQRS.Commands;
 using MyCQRS.Exceptions;
- 
+
 
 namespace MyCQRS.Messaging
 {
@@ -13,12 +14,12 @@ namespace MyCQRS.Messaging
             _commandHandlerFactory = commandHandlerFactory;
         }
 
-        public void Send<T>(T command) where T : Command
+        public async Task SendAsync<T>(T command) where T : Command
         {
             var handler = _commandHandlerFactory.GetHandler<T>();
             if (handler != null)
             {
-                handler.Execute(command);
+                await handler.ExecuteAsYnc(command);
             }
             else
             {

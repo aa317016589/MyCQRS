@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using MyCQRS.ApplicationHelper;
 using MyCQRS.Domain;
 using MyCQRS.Domain.Events;
@@ -51,7 +52,7 @@ namespace MyCQRS.Storage
             return (T)memento;
         }
 
-        public void Save(AggregateRoot aggregate)
+        public async Task SaveAsync(AggregateRoot aggregate)
         {
             var uncommittedChanges = aggregate.GetUncommittedChanges();
             var version = aggregate.Version;
@@ -77,7 +78,7 @@ namespace MyCQRS.Storage
             foreach (var @event in uncommittedChanges)
             {
                 var desEvent = Converter.ChangeTo(@event, @event.GetType());
-                _eventBus.Publish(desEvent);
+                await _eventBus.PublishAsync(desEvent);
             }
         }
 
@@ -85,6 +86,5 @@ namespace MyCQRS.Storage
         {
             _mementos.Add(memento);
         }
-
     }
 }

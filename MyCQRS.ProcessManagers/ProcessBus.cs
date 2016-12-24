@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using MyCQRS.Domain.Events;
 using MyCQRS.Messaging;
 
@@ -18,9 +19,10 @@ namespace MyCQRS.ProcessManagers
         }
 
 
-        public void Handle<T>(T @event) where T : Event
+        public async Task HandleAsync<T>(T @event) where T : Event
         {
-            _processFactory.Process<T>()?.Process(@event, _commandBus);
+            // ReSharper disable once PossibleNullReferenceException
+            await _processFactory.Process<T>()?.ProcessAsync(@event, _commandBus);
         }
     }
 }

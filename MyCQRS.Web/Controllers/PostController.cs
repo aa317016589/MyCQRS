@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Autofac;
@@ -31,13 +32,13 @@ namespace MyCQRS.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult Add(PostViewModel postViewModel)
+        public async Task<ActionResult>  Add(PostViewModel postViewModel)
         {
             Post post = ServiceLocator.Current.Container.Resolve<IMapper>().Map<Post>(postViewModel);
 
             post.UserId = Guid.NewGuid();
 
-            ServiceLocator.Current.CommandBus.Send(new PostAddCommand(post.PostId, -1, post));
+          await  ServiceLocator.Current.CommandBus.SendAsync(new PostAddCommand(post.PostId, -1, post));
 
             return View();
         }

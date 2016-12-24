@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using MyCQRS.Commands;
 using MyCQRS.Domain;
 using MyCQRS.Domain.Events;
@@ -8,9 +9,9 @@ namespace MyCQRS.ProcessManagers
 {
     public class PostAddProcess : IProcess<PostAddEvent>
     {
-        public void Process(PostAddEvent @event, ICommandBus commandBus)
+        public async Task ProcessAsync(PostAddEvent @event, ICommandBus commandBus)
         {
-            commandBus.Send(new UserChangeAccumulatePointCommand(@event.PostDetail.UserId, @event.Version, 1));
+            await commandBus.SendAsync(new UserChangeAccumulatePointCommand(@event.PostDetail.UserId, @event.Version, 1));
         }
     }
 }

@@ -27,6 +27,24 @@ namespace TestXC
     {
         static void Main(string[] args)
         {
+            PostXC postXc = new PostXC();
+            postXc.Id = Guid.NewGuid();
+
+            string Name = "swallow";
+
+            String result =  "{Name}:{Name}";
+
+            Console.WriteLine(string.Format("Aggregate {{postXc.Id} has been previously modified") );
+
+
+
+            Console.ReadKey();
+
+
+            return;
+
+
+
             TableMap.Config<PostXC>("Post").Map(s => s.Id, "PostId").Key(s => s.Id).Ignore(s => s.Content);
 
             using (var conn = GetConnection())

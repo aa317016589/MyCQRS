@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Threading.Tasks;
 using MyCQRS.Domain;
 
 namespace MyCQRS.Domain.Events
 {
     public interface IEventRepository<T> where T : AggregateRoot, new()
     {
-        void Save(AggregateRoot aggregate, int expectedVersion);
+        Task SaveAsync(AggregateRoot aggregate, int expectedVersion);
         T GetById(Guid id);
     }
 }

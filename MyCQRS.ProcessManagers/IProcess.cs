@@ -1,5 +1,4 @@
-﻿using MyCQRS.Commands;
-using MyCQRS.Domain;
+﻿using System.Threading.Tasks;
 using MyCQRS.Domain.Events;
 using MyCQRS.Messaging;
 
@@ -8,6 +7,6 @@ namespace MyCQRS.ProcessManagers
     public interface IProcess<T>
         where T : Event
     {
-        void Process(T @event, ICommandBus commandBus);
+        Task ProcessAsync(T @event, ICommandBus commandBus);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Autofac;
@@ -26,9 +27,9 @@ namespace MyCQRS.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult Add(UserViewModel userViewModel)
+        public async Task<ActionResult>  Add(UserViewModel userViewModel)
         {
-            ServiceLocator.Current.CommandBus.Send(new UserAddCommand(Guid.NewGuid(), -1, userViewModel.UserName));
+            await ServiceLocator.Current.CommandBus.SendAsync(new UserAddCommand(Guid.NewGuid(), -1, userViewModel.UserName));
 
             return View();
         }

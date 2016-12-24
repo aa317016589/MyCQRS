@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using MyCQRS.Domain;
 using MyCQRS.Domain.Events;
 using MyCQRS.Mementos;
@@ -9,7 +10,7 @@ namespace MyCQRS.Domain
     public interface IEventStorage
     {
         IEnumerable<Event> GetEvents(Guid aggregateId);
-        void Save(AggregateRoot aggregate);
+        Task SaveAsync(AggregateRoot aggregate);
         T GetMemento<T>(Guid aggregateId) where T : BaseMemento;
         void SaveMemento(BaseMemento memento);
     }

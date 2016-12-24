@@ -15,7 +15,10 @@ namespace MyCQRS.EventHandles
 
         public void Handle(UserAddEvent handle)
         {
-            
+            _reportDatabase.Add(new User()
+            {
+                UserName = handle.UserName
+            });
         }
     }
 }
