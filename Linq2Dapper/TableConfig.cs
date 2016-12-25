@@ -9,6 +9,14 @@ namespace Dapper.Contrib.Linq2Dapper
 {
     public static class TableEx
     {
+        /// <summary>
+        /// 增加配置
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="config"></param>
+        /// <param name="member"></param>
+        /// <param name="mapperName"></param>
+        /// <returns></returns>
         public static TableConfig<T> Map<T>(this TableConfig<T> config,
             Expression<Func<T, Object>> member, String mapperName)
         {
@@ -33,6 +41,13 @@ namespace Dapper.Contrib.Linq2Dapper
             return config;
         }
 
+        /// <summary>
+        /// 设置表名
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="config"></param>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
         public static TableConfig<T> Table<T>(this TableConfig<T> config, String tableName)
         {
             config.TableName = tableName;
@@ -40,6 +55,13 @@ namespace Dapper.Contrib.Linq2Dapper
             return config;
         }
 
+        /// <summary>
+        /// 设置主键
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="config"></param>
+        /// <param name="member"></param>
+        /// <returns></returns>
         public static TableConfig<T> Key<T>(this TableConfig<T> config, Expression<Func<T, Object>> member)
         {
             var propertyInfo = ReadMemberInfo(member);
@@ -54,6 +76,13 @@ namespace Dapper.Contrib.Linq2Dapper
             return config;
         }
 
+        /// <summary>
+        /// 设置忽略
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="config"></param>
+        /// <param name="member"></param>
+        /// <returns></returns>
         public static TableConfig<T> Ignore<T>(this TableConfig<T> config, Expression<Func<T, Object>> member)
         {
             var propertyInfo = ReadMemberInfo(member);
@@ -68,7 +97,12 @@ namespace Dapper.Contrib.Linq2Dapper
             return config;
         }
 
-
+        /// <summary>
+        /// 解析表达式树
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="expression"></param>
+        /// <returns></returns>
         public static PropertyInfo ReadMemberInfo<T>(Expression<Func<T, Object>> expression)
         {
             var body = expression.Body;
@@ -182,6 +216,9 @@ namespace Dapper.Contrib.Linq2Dapper
         //public Func<object, object> WriteConversion { get; set; }
     }
 
+    /// <summary>
+    /// 保存 TableConfig
+    /// </summary>
     public static class TableMap
     {
         public static readonly Dictionary<Type, TableConfig> Configs
