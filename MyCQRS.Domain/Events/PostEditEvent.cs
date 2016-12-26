@@ -1,6 +1,5 @@
 ﻿using System;
 using MyCQRS.Domain.Entities;
-using MyCQRS.Domain.Events;
 
 namespace MyCQRS.Domain.Events
 {

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -9,7 +8,6 @@ using System.Collections.Concurrent;
 using System.Reflection.Emit;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Runtime.CompilerServices;
 using Dapper;
 using Dapper.Contrib.Linq2Dapper;
 

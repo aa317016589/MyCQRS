@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using MyCQRS.Domain;
 
 namespace MyCQRS.Domain.Events
 {

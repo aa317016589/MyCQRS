@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MyCQRS.Domain;
 using MyCQRS.Domain.Events;
 using MyCQRS.Mementos;
 

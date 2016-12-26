@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
+﻿using System.Collections.Generic;
 using System.Linq;
 using MyCQRS.QueryServices.DTOs;
 using Dapper;
-using Dapper.Contrib.Extensions;
 using Dapper.Contrib.Linq2Dapper.Extensions;
 
 namespace MyCQRS.QueryServices.Dapper

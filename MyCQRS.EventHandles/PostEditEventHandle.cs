@@ -1,5 +1,4 @@
-﻿using System;
-using MyCQRS.Domain;
+﻿using MyCQRS.Domain;
 using MyCQRS.Domain.Entities;
 using MyCQRS.Domain.Events;
 

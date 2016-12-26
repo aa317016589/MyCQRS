@@ -1,6 +1,5 @@
-﻿using System;
-using MyCQRS.Domain.Events;
- 
+﻿using MyCQRS.Domain.Events;
+
 
 namespace MyCQRS.ProcessManagers
 {

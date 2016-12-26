@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
-using Autofac;
-using MyCQRS.ApplicationHelper;
 using MyCQRS.Commands;
-using MyCQRS.Domain.Entities;
 using MyCQRS.Web.Auxiliary;
 using MyCQRS.Web.Models;
 

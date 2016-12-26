@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using MyCQRS.Domain;
+﻿using System.Threading.Tasks;
 using MyCQRS.Domain.Events;
 
 namespace MyCQRS.Messaging

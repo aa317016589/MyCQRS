@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using Autofac;
 using MyCQRS.ApplicationHelper;
 using MyCQRS.CommandHandlers;
-using MyCQRS.Commands;
 using MyCQRS.Domain;
 using MyCQRS.Domain.Events;
 using MyCQRS.EventHandles;

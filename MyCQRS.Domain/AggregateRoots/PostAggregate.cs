@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using MyCQRS.Domain.Entities;
 using MyCQRS.Domain.Events;
 using MyCQRS.Domain.Mementos;

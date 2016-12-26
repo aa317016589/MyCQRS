@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.Owin;
-using MyCQRS.Web.Auxiliary;
+﻿using Microsoft.Owin;
 using Owin;
 
 [assembly: OwinStartup(typeof(MyCQRS.Web.Startup))]

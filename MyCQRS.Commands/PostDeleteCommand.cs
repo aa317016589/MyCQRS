@@ -1,5 +1,4 @@
 ﻿using System;
-using MyCQRS.Domain.Entities;
 
 namespace MyCQRS.Commands
 {

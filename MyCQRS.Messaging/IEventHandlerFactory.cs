@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using MyCQRS.Domain;
+﻿using System.Collections.Generic;
 using MyCQRS.Domain.Events;
 using MyCQRS.EventHandles;
 

@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using Dapper.Contrib.Extensions;
 using MyCQRS.Domain;
-using Dapper.Contrib.Extensions;
-using Dapper.Contrib.Linq2Dapper.Extensions;
-using Dapper;
 
 namespace MyCQRS.Storage
 {

@@ -1,5 +1,4 @@
-﻿using System;
-using Nelibur.ObjectMapper;
+﻿using Nelibur.ObjectMapper;
 
 namespace MyCQRS.ApplicationHelper
 {
