@@ -1,4 +1,4 @@
-﻿// ReSharper disable once CheckNamespace
+﻿
 namespace Dapper.Contrib.Linq2Dapper.Helpers
 {
     internal class QueryBuilderState

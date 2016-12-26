@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Linq.Expressions;
 using Dapper.Contrib.Linq2Dapper.Helpers;
-// ReSharper disable once CheckNamespace
+ 
 namespace Dapper.Contrib.Linq2Dapper
 {
     internal class QueryBuilder<TData> : ExpressionVisitor

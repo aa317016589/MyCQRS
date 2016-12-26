@@ -7,8 +7,8 @@
     <ProjectGuid>{3B33EDE2-3996-4B65-8998-3E2FE6A48F19}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Linq2Dapper</RootNamespace>
-    <AssemblyName>Linq2Dapper</AssemblyName>
+    <RootNamespace>Dapper.Contrib.Linq2Dapper</RootNamespace>
+    <AssemblyName>Dapper.Contrib.Linq2Dapper</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

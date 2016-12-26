@@ -12,7 +12,7 @@ using Dapper;
 using Dapper.Contrib.Linq2Dapper;
 
 #pragma warning disable 1573, 1591 // xml comments
-// ReSharper disable once CheckNamespace
+
 namespace Dapper.Contrib.Extensions
 {
 

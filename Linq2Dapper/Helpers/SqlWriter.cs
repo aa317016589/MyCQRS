@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
-// ReSharper disable once CheckNamespace
+
 namespace Dapper.Contrib.Linq2Dapper.Helpers
 {
     internal class SqlWriter<TData>

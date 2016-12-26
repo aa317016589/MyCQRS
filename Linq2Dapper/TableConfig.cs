@@ -4,7 +4,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-// ReSharper disable once CheckNamespace
 namespace Dapper.Contrib.Linq2Dapper
 {
     public static class TableEx
