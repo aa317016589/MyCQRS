@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using Dapper.Contrib.Linq2Dapper.Exceptions;
 using Dapper.Contrib.Linq2Dapper.Helpers;
 
@@ -77,5 +78,26 @@ namespace Dapper.Contrib.Linq2Dapper
             }
         }
 
+        public async Task<Object>   ExecuteAsync(Expression expression)
+        {
+            try
+            {
+                if (_connection.State != ConnectionState.Open) _connection.Open();
+
+                _qb.Evaluate(expression);
+
+                var data = await _connection.QueryAsync<TData>(_qb.Sql, _qb.Parameters);
+
+                return data;
+            }
+            catch (SqlException ex)
+            {
+                throw new InvalidQueryException(ex.Message);
+            }
+            finally
+            {
+                _connection.Close();
+            }
+        }
     }
 }

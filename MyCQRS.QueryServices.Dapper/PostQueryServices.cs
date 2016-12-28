@@ -1,19 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using MyCQRS.QueryServices.DTOs;
 using Dapper;
 using Dapper.Contrib.Linq2Dapper.Extensions;
+using Dapper.Contrib.Linq2Dapper;
 
 namespace MyCQRS.QueryServices.Dapper
 {
     public class PostQueryServices : BaseQueryService, IPostQueryServices
     {
-        public IEnumerable<PostQueryEntity> GetPosts()
+        public async Task<IEnumerable<PostQueryEntity>> GetPosts()
         {
-            using (var conn = GetConnection())
-            {
-                return conn.Query<PostQueryEntity>().ToList();
-            }
+            return await GetConnection().Query<PostQueryEntity>().ToListAsync();
         }
     }
 }

@@ -14,6 +14,8 @@ namespace MyCQRS.Web
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
             AutofacConfig.Register();
+
+            TableMapConfig.Init();
         }
 
 

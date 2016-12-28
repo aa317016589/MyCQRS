@@ -59,6 +59,7 @@
     <Compile Include="Helpers\TypeSystem.cs" />
     <Compile Include="Linq2Dapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QueryableExtensions.cs" />
     <Compile Include="QueryBuilder.cs" />
     <Compile Include="QueryProvider.cs" />
     <Compile Include="TableConfig.cs" />

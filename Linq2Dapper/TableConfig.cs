@@ -88,7 +88,7 @@ namespace Dapper.Contrib.Linq2Dapper
 
             var record = config.RecordRowConfigs.SingleOrDefault(s => s.ModelPropertyName == propertyInfo.Name);
 
-            if (record !=null)
+            if (record != null)
             {
                 config.RecordRowConfigs.Remove(record);
             }
@@ -172,6 +172,8 @@ namespace Dapper.Contrib.Linq2Dapper
                 });
             }
 
+            this.TableName = MapModelType.Name;
+
             return this;
         }
     }
@@ -220,7 +222,7 @@ namespace Dapper.Contrib.Linq2Dapper
     /// </summary>
     public static class TableMap
     {
-        public static readonly Dictionary<Type, TableConfig> Configs
+        internal static readonly Dictionary<Type, TableConfig> Configs
             = new Dictionary<Type, TableConfig>();
 
         public static TableConfig<T> Config<T>(String tableName = "")
