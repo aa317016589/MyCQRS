@@ -23,12 +23,12 @@ namespace Dapper.Contrib.Extensions
             bool IsDirty { get; set; }
         }
 
-        private static readonly ConcurrentDictionary<RuntimeTypeHandle, IEnumerable<PropertyInfo>> KeyProperties = new ConcurrentDictionary<RuntimeTypeHandle, IEnumerable<PropertyInfo>>();
+        //private static readonly ConcurrentDictionary<RuntimeTypeHandle, IEnumerable<PropertyInfo>> KeyProperties = new ConcurrentDictionary<RuntimeTypeHandle, IEnumerable<PropertyInfo>>();
         private static readonly ConcurrentDictionary<RuntimeTypeHandle, IEnumerable<PropertyInfo>> TypeProperties = new ConcurrentDictionary<RuntimeTypeHandle, IEnumerable<PropertyInfo>>();
         //private static readonly ConcurrentDictionary<RuntimeTypeHandle, IEnumerable<PropertyInfo>> ComputedProperties = new ConcurrentDictionary<RuntimeTypeHandle, IEnumerable<PropertyInfo>>();
-        private static readonly ConcurrentDictionary<RuntimeTypeHandle, string> GetQueries = new ConcurrentDictionary<RuntimeTypeHandle, string>();
-        private static readonly ConcurrentDictionary<RuntimeTypeHandle, string> TypeTableName = new ConcurrentDictionary<RuntimeTypeHandle, string>();
-        private static readonly ConcurrentDictionary<RuntimeTypeHandle, IEnumerable<PropertyInfo>> ParamCache = new ConcurrentDictionary<RuntimeTypeHandle, IEnumerable<PropertyInfo>>();
+        //private static readonly ConcurrentDictionary<RuntimeTypeHandle, string> GetQueries = new ConcurrentDictionary<RuntimeTypeHandle, string>();
+        //private static readonly ConcurrentDictionary<RuntimeTypeHandle, string> TypeTableName = new ConcurrentDictionary<RuntimeTypeHandle, string>();
+        private static readonly ConcurrentDictionary<Type, IEnumerable<PropertyInfo>> ParamCache = new ConcurrentDictionary<Type, IEnumerable<PropertyInfo>>();
 
         private static readonly Dictionary<string, ISqlAdapter> AdapterDictionary =
             new Dictionary<string, ISqlAdapter>()
@@ -50,33 +50,33 @@ namespace Dapper.Contrib.Extensions
         //    ComputedProperties[type.TypeHandle] = computedProperties;
         //    return computedProperties;
         //}
-        private static IEnumerable<PropertyInfo> KeyPropertiesCache(Type type)
-        {
-            IEnumerable<PropertyInfo> pi;
-            if (KeyProperties.TryGetValue(type.TypeHandle, out pi))
-            {
-                return pi;
-            }
-            var keyProperties = TableMap.Configs[type].RecordRowConfigs.Where(s => s.IsKey).Select(s => s.ModelProperty).ToList();
+        //private static IEnumerable<PropertyInfo> KeyPropertiesCache(Type type)
+        //{
+        //    IEnumerable<PropertyInfo> pi;
+        //    if (KeyProperties.TryGetValue(type.TypeHandle, out pi))
+        //    {
+        //        return pi;
+        //    }
+        //    var keyProperties = TableMap.Configs[type].RecordRowConfigs.Where(s => s.IsKey).Select(s => s.ModelProperty).ToList();
 
-            if (keyProperties.Any())
-            {
-                return keyProperties;
-            }
-
-
-            var allProperties = TypePropertiesCache(type);
-
-            var idProp = allProperties.FirstOrDefault(p => p.Name.ToLower() == "id");
-            if (idProp != null)
-            {
-                keyProperties.Add(idProp);
-            }
+        //    if (keyProperties.Any())
+        //    {
+        //        return keyProperties;
+        //    }
 
 
-            KeyProperties[type.TypeHandle] = keyProperties;
-            return keyProperties;
-        }
+        //    var allProperties = TypePropertiesCache(type);
+
+        //    var idProp = allProperties.FirstOrDefault(p => p.Name.ToLower() == "id");
+        //    if (idProp != null)
+        //    {
+        //        keyProperties.Add(idProp);
+        //    }
+
+
+        //    KeyProperties[type.TypeHandle] = keyProperties;
+        //    return keyProperties;
+        //}
         private static IEnumerable<PropertyInfo> TypePropertiesCache(Type type)
         {
             IEnumerable<PropertyInfo> pis;
@@ -102,9 +102,9 @@ namespace Dapper.Contrib.Extensions
             }
 
             IEnumerable<PropertyInfo> properties;
-            if (ParamCache.TryGetValue(obj.GetType().TypeHandle, out properties)) return properties.ToList();
+            if (ParamCache.TryGetValue(obj.GetType(), out properties)) return properties.ToList();
             properties = obj.GetType().GetProperties(BindingFlags.GetProperty | BindingFlags.Instance | BindingFlags.Public).ToList();
-            ParamCache[obj.GetType().TypeHandle] = properties;
+            ParamCache[obj.GetType()] = properties;
             return properties;
         }
 
@@ -279,21 +279,21 @@ namespace Dapper.Contrib.Extensions
             return TableMap.Configs[type].TableName;
 
 
-            string name;
-            if (!TypeTableName.TryGetValue(type.TypeHandle, out name))
-            {
-                name = type.Name + "s";
-                if (type.IsInterface && name.StartsWith("I"))
-                    name = name.Substring(1);
+            //string name;
+            //if (!TypeTableName.TryGetValue(type.TypeHandle, out name))
+            //{
+            //    name = type.Name + "s";
+            //    if (type.IsInterface && name.StartsWith("I"))
+            //        name = name.Substring(1);
 
-                //NOTE: This as dynamic trick should be able to handle both our own Table-attribute as well as the one in EntityFramework 
-                var tableattr = type.GetCustomAttributes(false).Where(attr => attr.GetType().Name == "TableAttribute").SingleOrDefault() as
-                    dynamic;
-                if (tableattr != null)
-                    name = tableattr.Name;
-                TypeTableName[type.TypeHandle] = name;
-            }
-            return name;
+            //    //NOTE: This as dynamic trick should be able to handle both our own Table-attribute as well as the one in EntityFramework 
+            //    var tableattr = type.GetCustomAttributes(false).Where(attr => attr.GetType().Name == "TableAttribute").SingleOrDefault() as
+            //        dynamic;
+            //    if (tableattr != null)
+            //        name = tableattr.Name;
+            //    TypeTableName[type.TypeHandle] = name;
+            //}
+            //return name;
         }
 
         #region Insert
