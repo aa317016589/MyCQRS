@@ -130,55 +130,67 @@ namespace Dapper.Contrib.Extensions
         /// <param name="connection">Open SqlConnection</param>
         /// <param name="id">Id of the entity to get, must be marked with [Key] attribute</param>
         /// <returns>Entity of T</returns>
-        public static T Get<T>(this IDbConnection connection, dynamic id, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
+        public static T Get<T>(this IDbConnection connection, Object condition, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
         {
-            var type = typeof(T);
-            string sql;
-            if (!GetQueries.TryGetValue(type.TypeHandle, out sql))
-            {
-                var keys = KeyPropertiesCache(type);
-                if (keys.Count() > 1)
-                    throw new DataException("Get<T> only supports an entity with a single [Key] property");
-                if (!keys.Any())
-                    throw new DataException("Get<T> only supports en entity with a [Key] property");
+            var sb = new StringBuilder();
+            sb.AppendFormat("select * from {0} ", GetTableName(typeof(T)));
 
-                var onlyKey = keys.First();
+            IEnumerable<PropertyInfo> whereProperties = GetPropertyInfos(condition);
 
-                var name = GetTableName(type);
+            sb.Append(" where ");
+            sb.Append(String.Join(" and ", whereProperties.Select(s => $"{s.Name}=@{s.Name}")));
 
-                // TODO: pluralizer 
-                // TODO: query information schema and only select fields that are both in information schema and underlying class / interface 
-                sql = "select * from " + name + " where " + onlyKey.Name + " = @id";
-                GetQueries[type.TypeHandle] = sql;
-            }
+            return connection.QuerySingleOrDefault<T>(sb.ToString(), condition, transaction: transaction,
+                commandTimeout: commandTimeout);
 
-            var dynParms = new DynamicParameters();
-            dynParms.Add("@id", id);
 
-            T obj = null;
+            //var type = typeof(T);
+            //string sql;
+            //if (!GetQueries.TryGetValue(type.TypeHandle, out sql))
+            //{
+            //    var keys = KeyPropertiesCache(type);
+            //    if (keys.Count() > 1)
+            //        throw new DataException("Get<T> only supports an entity with a single [Key] property");
+            //    if (!keys.Any())
+            //        throw new DataException("Get<T> only supports en entity with a [Key] property");
 
-            if (type.IsInterface)
-            {
-                var res = connection.Query(sql, dynParms).FirstOrDefault() as IDictionary<string, object>;
+            //    var onlyKey = keys.First();
 
-                if (res == null)
-                    return (T)((object)null);
+            //    var name = GetTableName(type);
 
-                obj = ProxyGenerator.GetInterfaceProxy<T>();
+            //    // TODO: pluralizer 
+            //    // TODO: query information schema and only select fields that are both in information schema and underlying class / interface 
+            //    sql = "select * from " + name + " where " + onlyKey.Name + " = @id";
+            //    GetQueries[type.TypeHandle] = sql;
+            //}
 
-                foreach (var property in TypePropertiesCache(type))
-                {
-                    var val = res[property.Name];
-                    property.SetValue(obj, val, null);
-                }
+            //var dynParms = new DynamicParameters();
+            //dynParms.Add("@id", id);
 
-                ((IProxy)obj).IsDirty = false;   //reset change tracking and return
-            }
-            else
-            {
-                obj = connection.Query<T>(sql, dynParms, transaction: transaction, commandTimeout: commandTimeout).FirstOrDefault();
-            }
-            return obj;
+            //T obj = null;
+
+            //if (type.IsInterface)
+            //{
+            //    var res = connection.Query(sql, dynParms).FirstOrDefault() as IDictionary<string, object>;
+
+            //    if (res == null)
+            //        return (T)((object)null);
+
+            //    obj = ProxyGenerator.GetInterfaceProxy<T>();
+
+            //    foreach (var property in TypePropertiesCache(type))
+            //    {
+            //        var val = res[property.Name];
+            //        property.SetValue(obj, val, null);
+            //    }
+
+            //    ((IProxy)obj).IsDirty = false;   //reset change tracking and return
+            //}
+            //else
+            //{
+            //    obj = connection.Query<T>(sql, dynParms, transaction: transaction, commandTimeout: commandTimeout).FirstOrDefault();
+            //}
+            //return obj;
         }
 
         /// <summary>
@@ -190,55 +202,66 @@ namespace Dapper.Contrib.Extensions
         /// <param name="connection">Open SqlConnection</param>
         /// <param name="id">Id of the entity to get, must be marked with [Key] attribute</param>
         /// <returns>Entity of T</returns>
-        public static async Task<T> GetAsync<T>(this IDbConnection connection, dynamic id, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
+        public static async Task<T> GetAsync<T>(this IDbConnection connection, object condition, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
         {
-            var type = typeof(T);
-            string sql;
-            if (!GetQueries.TryGetValue(type.TypeHandle, out sql))
-            {
-                var keys = KeyPropertiesCache(type);
-                if (keys.Count() > 1)
-                    throw new DataException("Get<T> only supports an entity with a single [Key] property");
-                if (!keys.Any())
-                    throw new DataException("Get<T> only supports en entity with a [Key] property");
+            var sb = new StringBuilder();
+            sb.AppendFormat("select * from {0} ", GetTableName(typeof(T)));
 
-                var onlyKey = keys.First();
+            IEnumerable<PropertyInfo> whereProperties = GetPropertyInfos(condition);
 
-                var name = GetTableName(type);
+            sb.Append(" where ");
+            sb.Append(String.Join(" and ", whereProperties.Select(s => $"{s.Name}=@{s.Name}")));
 
-                // TODO: pluralizer 
-                // TODO: query information schema and only select fields that are both in information schema and underlying class / interface 
-                sql = "select * from " + name + " where " + onlyKey.Name + " = @id";
-                GetQueries[type.TypeHandle] = sql;
-            }
+            return await connection.QuerySingleOrDefaultAsync<T>(sb.ToString(), condition, transaction: transaction,
+                commandTimeout: commandTimeout);
+ 
+            //var type = typeof(T);
+            //string sql;
+            //if (!GetQueries.TryGetValue(type.TypeHandle, out sql))
+            //{
+            //    var keys = KeyPropertiesCache(type);
+            //    if (keys.Count() > 1)
+            //        throw new DataException("Get<T> only supports an entity with a single [Key] property");
+            //    if (!keys.Any())
+            //        throw new DataException("Get<T> only supports en entity with a [Key] property");
 
-            var dynParms = new DynamicParameters();
-            dynParms.Add("@id", id);
+            //    var onlyKey = keys.First();
 
-            T obj = null;
+            //    var name = GetTableName(type);
 
-            if (type.IsInterface)
-            {
-                var res = (await connection.QueryAsync<dynamic>(sql, dynParms).ConfigureAwait(false)).FirstOrDefault() as IDictionary<string, object>;
+            //    // TODO: pluralizer 
+            //    // TODO: query information schema and only select fields that are both in information schema and underlying class / interface 
+            //    sql = "select * from " + name + " where " + onlyKey.Name + " = @id";
+            //    GetQueries[type.TypeHandle] = sql;
+            //}
 
-                if (res == null)
-                    return (T)((object)null);
+            //var dynParms = new DynamicParameters();
+            //dynParms.Add("@id", id);
 
-                obj = ProxyGenerator.GetInterfaceProxy<T>();
+            //T obj = null;
 
-                foreach (var property in TypePropertiesCache(type))
-                {
-                    var val = res[property.Name];
-                    property.SetValue(obj, val, null);
-                }
+            //if (type.IsInterface)
+            //{
+            //    var res = (await connection.QueryAsync<dynamic>(sql, dynParms).ConfigureAwait(false)).FirstOrDefault() as IDictionary<string, object>;
 
-                ((IProxy)obj).IsDirty = false;   //reset change tracking and return
-            }
-            else
-            {
-                obj = (await connection.QueryAsync<T>(sql, dynParms, transaction: transaction, commandTimeout: commandTimeout).ConfigureAwait(false)).FirstOrDefault();
-            }
-            return obj;
+            //    if (res == null)
+            //        return (T)((object)null);
+
+            //    obj = ProxyGenerator.GetInterfaceProxy<T>();
+
+            //    foreach (var property in TypePropertiesCache(type))
+            //    {
+            //        var val = res[property.Name];
+            //        property.SetValue(obj, val, null);
+            //    }
+
+            //    ((IProxy)obj).IsDirty = false;   //reset change tracking and return
+            //}
+            //else
+            //{
+            //    obj = (await connection.QueryAsync<T>(sql, dynParms, transaction: transaction, commandTimeout: commandTimeout).ConfigureAwait(false)).FirstOrDefault();
+            //}
+            //return obj;
         }
         #endregion
 
