@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Collections.Concurrent;
+using System.Dynamic;
 using System.Reflection.Emit;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,7 +16,6 @@ using Dapper.Contrib.Linq2Dapper;
 
 namespace Dapper.Contrib.Extensions
 {
-
     public static class SqlMapperExtensions
     {
         public interface IProxy
@@ -25,50 +25,54 @@ namespace Dapper.Contrib.Extensions
 
         private static readonly ConcurrentDictionary<RuntimeTypeHandle, IEnumerable<PropertyInfo>> KeyProperties = new ConcurrentDictionary<RuntimeTypeHandle, IEnumerable<PropertyInfo>>();
         private static readonly ConcurrentDictionary<RuntimeTypeHandle, IEnumerable<PropertyInfo>> TypeProperties = new ConcurrentDictionary<RuntimeTypeHandle, IEnumerable<PropertyInfo>>();
-        private static readonly ConcurrentDictionary<RuntimeTypeHandle, IEnumerable<PropertyInfo>> ComputedProperties = new ConcurrentDictionary<RuntimeTypeHandle, IEnumerable<PropertyInfo>>();
+        //private static readonly ConcurrentDictionary<RuntimeTypeHandle, IEnumerable<PropertyInfo>> ComputedProperties = new ConcurrentDictionary<RuntimeTypeHandle, IEnumerable<PropertyInfo>>();
         private static readonly ConcurrentDictionary<RuntimeTypeHandle, string> GetQueries = new ConcurrentDictionary<RuntimeTypeHandle, string>();
         private static readonly ConcurrentDictionary<RuntimeTypeHandle, string> TypeTableName = new ConcurrentDictionary<RuntimeTypeHandle, string>();
+        private static readonly ConcurrentDictionary<RuntimeTypeHandle, IEnumerable<PropertyInfo>> ParamCache = new ConcurrentDictionary<RuntimeTypeHandle, IEnumerable<PropertyInfo>>();
 
-        private static readonly Dictionary<string, ISqlAdapter> AdapterDictionary = new Dictionary<string, ISqlAdapter>() {
-																							{"sqlconnection", new SqlServerAdapter()},
-																							{"npgsqlconnection", new PostgresAdapter()},
-																							{"sqliteconnection", new SQLiteAdapter()}
-																						};
-        private static IEnumerable<PropertyInfo> ComputedPropertiesCache(Type type)
+        private static readonly Dictionary<string, ISqlAdapter> AdapterDictionary =
+            new Dictionary<string, ISqlAdapter>()
+            {
+                {"sqlconnection", new SqlServerAdapter()},
+                {"npgsqlconnection", new PostgresAdapter()},
+                {"sqliteconnection", new SQLiteAdapter()}
+            };
+        //private static IEnumerable<PropertyInfo> ComputedPropertiesCache(Type type)
+        //{
+        //    IEnumerable<PropertyInfo> pi;
+        //    if (ComputedProperties.TryGetValue(type.TypeHandle, out pi))
+        //    {
+        //        return pi;
+        //    }
+
+        //    var computedProperties = TypePropertiesCache(type).Where(p => p.GetCustomAttributes(true).Any(a => a is ComputedAttribute)).ToList();
+
+        //    ComputedProperties[type.TypeHandle] = computedProperties;
+        //    return computedProperties;
+        //}
+        private static IEnumerable<PropertyInfo> KeyPropertiesCache(Type type)
         {
             IEnumerable<PropertyInfo> pi;
-            if (ComputedProperties.TryGetValue(type.TypeHandle, out pi))
+            if (KeyProperties.TryGetValue(type.TypeHandle, out pi))
             {
                 return pi;
             }
-
-            var computedProperties = TypePropertiesCache(type).Where(p => p.GetCustomAttributes(true).Any(a => a is ComputedAttribute)).ToList();
-
-            ComputedProperties[type.TypeHandle] = computedProperties;
-            return computedProperties;
-        }
-        private static IEnumerable<PropertyInfo> KeyPropertiesCache(Type type)
-        {
             var keyProperties = TableMap.Configs[type].RecordRowConfigs.Where(s => s.IsKey).Select(s => s.ModelProperty).ToList();
-            //IEnumerable<PropertyInfo> pi;
-            //if (KeyProperties.TryGetValue(type.TypeHandle, out pi))
-            //{
-            //    return pi;
-            //}
 
-            
-            //var keyProperties = allProperties.Where(p => p.GetCustomAttributes(true).Any(a => a is KeyAttribute)).ToList();
-
-            if (!keyProperties.Any())
+            if (keyProperties.Any())
             {
-                var allProperties = TypePropertiesCache(type);
-
-                var idProp = allProperties.FirstOrDefault(p => p.Name.ToLower() == "id");
-                if (idProp != null)
-                {
-                    keyProperties.Add(idProp);
-                }
+                return keyProperties;
             }
+
+
+            var allProperties = TypePropertiesCache(type);
+
+            var idProp = allProperties.FirstOrDefault(p => p.Name.ToLower() == "id");
+            if (idProp != null)
+            {
+                keyProperties.Add(idProp);
+            }
+
 
             KeyProperties[type.TypeHandle] = keyProperties;
             return keyProperties;
@@ -81,22 +85,42 @@ namespace Dapper.Contrib.Extensions
                 return pis;
             }
 
-            var properties = type.GetProperties().Where(IsWriteable).ToArray();
+            //移除WriteAttribute，不适用此的话，将不会出现在集合中。
+            //var properties = type.GetProperties().Where(IsWriteable).ToArray();
+
+            var properties = TableMap.Configs[type].RecordRowConfigs.Select(s => s.ModelProperty);
+
             TypeProperties[type.TypeHandle] = properties;
+
+            return properties;
+        }
+        private static IEnumerable<PropertyInfo> GetPropertyInfos(object obj)
+        {
+            if (obj == null)
+            {
+                return new List<PropertyInfo>();
+            }
+
+            IEnumerable<PropertyInfo> properties;
+            if (ParamCache.TryGetValue(obj.GetType().TypeHandle, out properties)) return properties.ToList();
+            properties = obj.GetType().GetProperties(BindingFlags.GetProperty | BindingFlags.Instance | BindingFlags.Public).ToList();
+            ParamCache[obj.GetType().TypeHandle] = properties;
             return properties;
         }
 
-        public static bool IsWriteable(PropertyInfo pi)
-        {
-            object[] attributes = pi.GetCustomAttributes(typeof(WriteAttribute), false);
-            if (attributes.Length == 1)
-            {
-                WriteAttribute write = (WriteAttribute)attributes[0];
-                return write.Write;
-            }
-            return true;
-        }
 
+        //public static bool IsWriteable(PropertyInfo pi)
+        //{
+        //    object[] attributes = pi.GetCustomAttributes(typeof(WriteAttribute), false);
+        //    if (attributes.Length == 1)
+        //    {
+        //        WriteAttribute write = (WriteAttribute)attributes[0];
+        //        return write.Write;
+        //    }
+        //    return true;
+        //}
+
+        #region Get
         /// <summary>
         /// Returns a single entity by a single id from table "Ts". T must be of interface type. 
         /// Id must be marked with [Key] attribute.
@@ -115,7 +139,7 @@ namespace Dapper.Contrib.Extensions
                 var keys = KeyPropertiesCache(type);
                 if (keys.Count() > 1)
                     throw new DataException("Get<T> only supports an entity with a single [Key] property");
-                if (keys.Count() == 0)
+                if (!keys.Any())
                     throw new DataException("Get<T> only supports en entity with a [Key] property");
 
                 var onlyKey = keys.First();
@@ -175,7 +199,7 @@ namespace Dapper.Contrib.Extensions
                 var keys = KeyPropertiesCache(type);
                 if (keys.Count() > 1)
                     throw new DataException("Get<T> only supports an entity with a single [Key] property");
-                if (keys.Count() == 0)
+                if (!keys.Any())
                     throw new DataException("Get<T> only supports en entity with a [Key] property");
 
                 var onlyKey = keys.First();
@@ -216,9 +240,22 @@ namespace Dapper.Contrib.Extensions
             }
             return obj;
         }
+        #endregion
 
         private static string GetTableName(Type type)
         {
+            if (!TableMap.Configs.ContainsKey(type))
+            {
+                TableConfig tableConfig = TableConfig.CreateTableConfig(type).InitMap();
+
+                TableMap.Configs.Add(type, tableConfig);
+
+                return tableConfig.TableName;
+            }
+
+            return TableMap.Configs[type].TableName;
+
+
             string name;
             if (!TypeTableName.TryGetValue(type.TypeHandle, out name))
             {
@@ -236,6 +273,7 @@ namespace Dapper.Contrib.Extensions
             return name;
         }
 
+        #region Insert
         /// <summary>
         /// Inserts an entity into table "Ts" and returns identity id.
         /// </summary>
@@ -244,41 +282,44 @@ namespace Dapper.Contrib.Extensions
         /// <returns>Identity of inserted entity</returns>
         public static long Insert<T>(this IDbConnection connection, T entityToInsert, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
         {
-
             var type = typeof(T);
-
             var name = GetTableName(type);
+            var allProperties = TypePropertiesCache(type);//全部的
+            //var keyProperties = KeyPropertiesCache(type);//主键,准确地说应该是自增类型的或者是由数据库生成的
+            //var computedProperties = ComputedPropertiesCache(type);//带有列名的，这里表示自增类型的
+            //var allPropertiesExceptKeyAndComputed = allProperties.Except(computedProperties);
+            var sbColumn = String.Join(", ", allProperties.Select(s => $"[{s.Name}]"));
+            var sbParameter = String.Join(", ", allProperties.Select(s => $"@{s.Name}"));
 
-            var sbColumnList = new StringBuilder(null);
-
-            var allProperties = TypePropertiesCache(type);
-            var keyProperties = KeyPropertiesCache(type);
-            var computedProperties = ComputedPropertiesCache(type);
-            var allPropertiesExceptKeyAndComputed = allProperties.Except(keyProperties.Union(computedProperties));
-
-            for (var i = 0; i < allPropertiesExceptKeyAndComputed.Count(); i++)
-            {
-                var property = allPropertiesExceptKeyAndComputed.ElementAt(i);
-                sbColumnList.AppendFormat("[{0}]", property.Name);
-                if (i < allPropertiesExceptKeyAndComputed.Count() - 1)
-                    sbColumnList.Append(", ");
-            }
-
-            var sbParameterList = new StringBuilder(null);
-            for (var i = 0; i < allPropertiesExceptKeyAndComputed.Count(); i++)
-            {
-                var property = allPropertiesExceptKeyAndComputed.ElementAt(i);
-                sbParameterList.AppendFormat("@{0}", property.Name);
-                if (i < allPropertiesExceptKeyAndComputed.Count() - 1)
-                    sbParameterList.Append(", ");
-            }
             ISqlAdapter adapter = GetFormatter(connection);
-            int id = adapter.Insert(connection, transaction, commandTimeout, name, sbColumnList.ToString(), sbParameterList.ToString(), keyProperties, entityToInsert);
-            return id;
+            return adapter.Insert(connection, transaction, commandTimeout, name, sbColumn, sbParameter, null, entityToInsert);
+
+
+            //for (var i = 0; i < allPropertiesExceptKeyAndComputed.Count(); i++)
+            //{
+            //    var property = allPropertiesExceptKeyAndComputed.ElementAt(i);
+            //    sbColumnList.AppendFormat("[{0}]", property.Name);
+
+            //    if (i < allPropertiesExceptKeyAndComputed.Count() - 1)
+            //        sbColumnList.Append(", ");
+            //}
+
+
+            //for (var i = 0; i < allPropertiesExceptKeyAndComputed.Count(); i++)
+            //{
+            //    var property = allPropertiesExceptKeyAndComputed.ElementAt(i);
+            //    sbParameterList.AppendFormat("@{0}", property.Name);
+            //    if (i < allPropertiesExceptKeyAndComputed.Count() - 1)
+            //        sbParameterList.Append(", ");
+            //}
+
+
+
         }
 
         /// <summary>
-        /// Inserts an entity into table "Ts" asynchronously using .NET 4.5 Task and returns identity id.
+        /// Inserts an entity into table "Ts" asynchronously 
+        /// using .NET 4.5 Task and returns identity id.
         /// </summary>
         /// <param name="connection">Open SqlConnection</param>
         /// <param name="entityToInsert">Entity to insert</param>
@@ -287,233 +328,252 @@ namespace Dapper.Contrib.Extensions
         {
 
             var type = typeof(T);
-
             var name = GetTableName(type);
+            var allProperties = TypePropertiesCache(type);//全部的
+            var sbColumn = String.Join(", ", allProperties.Select(s => $"[{s.Name}]"));
+            var sbParameter = String.Join(", ", allProperties.Select(s => $"@{s.Name}"));
 
-            var sbColumnList = new StringBuilder(null);
-
-            var allProperties = TypePropertiesCache(type);
-            var keyProperties = KeyPropertiesCache(type);
-            var computedProperties = ComputedPropertiesCache(type);
-            var allPropertiesExceptKeyAndComputed = allProperties.Except(keyProperties.Union(computedProperties));
-
-            for (var i = 0; i < allPropertiesExceptKeyAndComputed.Count(); i++)
-            {
-                var property = allPropertiesExceptKeyAndComputed.ElementAt(i);
-                sbColumnList.AppendFormat("[{0}]", property.Name);
-                if (i < allPropertiesExceptKeyAndComputed.Count() - 1)
-                    sbColumnList.Append(", ");
-            }
-
-            var sbParameterList = new StringBuilder(null);
-            for (var i = 0; i < allPropertiesExceptKeyAndComputed.Count(); i++)
-            {
-                var property = allPropertiesExceptKeyAndComputed.ElementAt(i);
-                sbParameterList.AppendFormat("@{0}", property.Name);
-                if (i < allPropertiesExceptKeyAndComputed.Count() - 1)
-                    sbParameterList.Append(", ");
-            }
             ISqlAdapter adapter = GetFormatter(connection);
-            return adapter.InsertAsync(connection, transaction, commandTimeout, name, sbColumnList.ToString(), sbParameterList.ToString(), keyProperties, entityToInsert);
-        }
+            return adapter.InsertAsync(connection, transaction, commandTimeout, name, sbColumn, sbParameter, null, entityToInsert);
 
+
+            //var type = typeof(T);
+
+            //var name = GetTableName(type);
+
+            //var sbColumnList = new StringBuilder(null);
+
+            //var allProperties = TypePropertiesCache(type);
+            //var keyProperties = KeyPropertiesCache(type);
+            //var computedProperties = ComputedPropertiesCache(type);
+            //var allPropertiesExceptKeyAndComputed = allProperties.Except(keyProperties.Union(computedProperties));
+
+            //for (var i = 0; i < allPropertiesExceptKeyAndComputed.Count(); i++)
+            //{
+            //    var property = allPropertiesExceptKeyAndComputed.ElementAt(i);
+            //    sbColumnList.AppendFormat("[{0}]", property.Name);
+            //    if (i < allPropertiesExceptKeyAndComputed.Count() - 1)
+            //        sbColumnList.Append(", ");
+            //}
+
+            //var sbParameterList = new StringBuilder(null);
+            //for (var i = 0; i < allPropertiesExceptKeyAndComputed.Count(); i++)
+            //{
+            //    var property = allPropertiesExceptKeyAndComputed.ElementAt(i);
+            //    sbParameterList.AppendFormat("@{0}", property.Name);
+            //    if (i < allPropertiesExceptKeyAndComputed.Count() - 1)
+            //        sbParameterList.Append(", ");
+            //}
+            //ISqlAdapter adapter = GetFormatter(connection);
+            //return adapter.InsertAsync(connection, transaction, commandTimeout, name, sbColumnList.ToString(), sbParameterList.ToString(), keyProperties, entityToInsert);
+        }
+        #endregion
+
+        #region Update
         /// <summary>
-        /// Updates entity in table "Ts", checks if the entity is modified if the entity is tracked by the Get() extension.
+        /// Updates entity in table "Ts", 
+        /// checks if the entity is modified if the entity is tracked by the Get() extension.
         /// </summary>
         /// <typeparam name="T">Type to be updated</typeparam>
         /// <param name="connection">Open SqlConnection</param>
         /// <param name="entityToUpdate">Entity to be updated</param>
         /// <returns>true if updated, false if not found or not modified (tracked entities)</returns>
-        public static bool Update<T>(this IDbConnection connection, T entityToUpdate, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
+        public static bool Update<T>(this IDbConnection connection, dynamic data, object condition, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
         {
-            var proxy = entityToUpdate as IProxy;
-            if (proxy != null)
-            {
-                if (!proxy.IsDirty) return false;
-            }
-
-            var type = typeof(T);
-
-            var keyProperties = KeyPropertiesCache(type);
-            if (!keyProperties.Any())
-                throw new ArgumentException("Entity must have at least one [Key] property");
-
-            var name = GetTableName(type);
+            var name = GetTableName(typeof(T));
 
             var sb = new StringBuilder();
             sb.AppendFormat("update {0} set ", name);
 
-            var allProperties = TypePropertiesCache(type);
-            var computedProperties = ComputedPropertiesCache(type);
-            var nonIdProps = allProperties.Except(keyProperties.Union(computedProperties));
+            IEnumerable<PropertyInfo> updateProperties = GetPropertyInfos(data);
+            IEnumerable<PropertyInfo> whereProperties = GetPropertyInfos(condition);
 
-            for (var i = 0; i < nonIdProps.Count(); i++)
-            {
-                var property = nonIdProps.ElementAt(i);
-                sb.AppendFormat("{0} = @{1}", property.Name, property.Name);
-                if (i < nonIdProps.Count() - 1)
-                    sb.AppendFormat(", ");
-            }
+            sb.Append(String.Join(", ", updateProperties.Select(s => $"{s.Name}=@{s.Name}")));
             sb.Append(" where ");
-            for (var i = 0; i < keyProperties.Count(); i++)
-            {
-                var property = keyProperties.ElementAt(i);
-                sb.AppendFormat("{0} = @{1}", property.Name, property.Name);
-                if (i < keyProperties.Count() - 1)
-                    sb.AppendFormat(" and ");
-            }
-            var updated = connection.Execute(sb.ToString(), entityToUpdate, commandTimeout: commandTimeout, transaction: transaction);
-            return updated > 0;
+            sb.Append(String.Join(" and ", whereProperties.Select(s => $"{s.Name}=@{s.Name}")));
+
+            //var parameters = new DynamicParameters(data);
+            //var expandoObject = new ExpandoObject() as IDictionary<string, object>;
+            //foreach (var whereProperty in whereProperties)
+            //{
+            //    expandoObject.Add(whereProperty.Name, whereProperty.GetValue(condition, null));
+            //}
+            //parameters.AddDynamicParams(expandoObject);
+
+            return connection.Execute(sb.ToString(), condition, commandTimeout: commandTimeout, transaction: transaction) > 0;
         }
 
         /// <summary>
-        /// Updates entity in table "Ts" asynchronously using .NET 4.5 Task, checks if the entity is modified if the entity is tracked by the Get() extension.
+        /// Updates entity in table "Ts" asynchronously using .NET 4.5 Task, 
+        /// checks if the entity is modified if the entity is tracked by the Get() extension.
         /// </summary>
         /// <typeparam name="T">Type to be updated</typeparam>
         /// <param name="connection">Open SqlConnection</param>
         /// <param name="entityToUpdate">Entity to be updated</param>
-        /// <returns>true if updated, false if not found or not modified (tracked entities)</returns>
-        public static async Task<bool> UpdateAsync<T>(this IDbConnection connection, T entityToUpdate, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
+        /// <returns>true if updated, false if not found or not modified (tracked entities)</returns>             
+
+        public static async Task<bool> UpdateAsync<T>(this IDbConnection connection, dynamic data, object condition, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
         {
-            var proxy = entityToUpdate as IProxy;
-            if (proxy != null)
-            {
-                if (!proxy.IsDirty) return false;
-            }
-
-            var type = typeof(T);
-
-            var keyProperties = KeyPropertiesCache(type);
-            if (!keyProperties.Any())
-                throw new ArgumentException("Entity must have at least one [Key] property");
-
-            var name = GetTableName(type);
+            var name = GetTableName(typeof(T));
 
             var sb = new StringBuilder();
             sb.AppendFormat("update {0} set ", name);
 
-            var allProperties = TypePropertiesCache(type);
-            var computedProperties = ComputedPropertiesCache(type);
-            var nonIdProps = allProperties.Except(keyProperties.Union(computedProperties));
+            IEnumerable<PropertyInfo> updateProperties = GetPropertyInfos(data);
+            IEnumerable<PropertyInfo> whereProperties = GetPropertyInfos(condition);
 
-            for (var i = 0; i < nonIdProps.Count(); i++)
-            {
-                var property = nonIdProps.ElementAt(i);
-                sb.AppendFormat("{0} = @{1}", property.Name, property.Name);
-                if (i < nonIdProps.Count() - 1)
-                    sb.AppendFormat(", ");
-            }
+            sb.Append(String.Join(", ", updateProperties.Select(s => $"{s.Name}=@{s.Name}")));
             sb.Append(" where ");
-            for (var i = 0; i < keyProperties.Count(); i++)
-            {
-                var property = keyProperties.ElementAt(i);
-                sb.AppendFormat("{0} = @{1}", property.Name, property.Name);
-                if (i < keyProperties.Count() - 1)
-                    sb.AppendFormat(" and ");
-            }
-            var updated = await connection.ExecuteAsync(sb.ToString(), entityToUpdate, commandTimeout: commandTimeout, transaction: transaction).ConfigureAwait(false);
-            return updated > 0;
+            sb.Append(String.Join(" and ", whereProperties.Select(s => $"{s.Name}=@{s.Name}")));
+ 
+            return await connection.ExecuteAsync(sb.ToString(), condition, commandTimeout: commandTimeout, transaction: transaction) > 0;
         }
 
-        /// <summary>
-        /// Delete entity in table "Ts".
-        /// </summary>
-        /// <typeparam name="T">Type of entity</typeparam>
-        /// <param name="connection">Open SqlConnection</param>
-        /// <param name="entityToDelete">Entity to delete</param>
-        /// <returns>true if deleted, false if not found</returns>
-        public static bool Delete<T>(this IDbConnection connection, T entityToDelete, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
-        {
-            if (entityToDelete == null)
-                throw new ArgumentException("Cannot Delete null Object", "entityToDelete");
+        //public static async Task<bool> UpdateAsync<T>(this IDbConnection connection, T entityToUpdate, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
+        //{
+        //    var proxy = entityToUpdate as IProxy;
+        //    if (proxy != null)
+        //    {
+        //        if (!proxy.IsDirty) return false;
+        //    }
 
-            var type = typeof(T);
+        //    var type = typeof(T);
 
-            var keyProperties = KeyPropertiesCache(type);
-            if (!keyProperties.Any())
-                throw new ArgumentException("Entity must have at least one [Key] property");
+        //    var keyProperties = KeyPropertiesCache(type);
+        //    if (!keyProperties.Any())
+        //        throw new ArgumentException("Entity must have at least one [Key] property");
 
-            var name = GetTableName(type);
+        //    var name = GetTableName(type);
 
-            var sb = new StringBuilder();
-            sb.AppendFormat("delete from {0} where ", name);
+        //    var sb = new StringBuilder();
+        //    sb.AppendFormat("update {0} set ", name);
 
-            for (var i = 0; i < keyProperties.Count(); i++)
-            {
-                var property = keyProperties.ElementAt(i);
-                sb.AppendFormat("{0} = @{1}", property.Name, property.Name);
-                if (i < keyProperties.Count() - 1)
-                    sb.AppendFormat(" and ");
-            }
-            var deleted = connection.Execute(sb.ToString(), entityToDelete, transaction: transaction, commandTimeout: commandTimeout);
-            return deleted > 0;
-        }
+        //    var allProperties = TypePropertiesCache(type);
+        //    var computedProperties = ComputedPropertiesCache(type);
+        //    var nonIdProps = allProperties.Except(keyProperties.Union(computedProperties));
 
-        /// <summary>
-        /// Delete entity in table "Ts" asynchronously using .NET 4.5 Task.
-        /// </summary>
-        /// <typeparam name="T">Type of entity</typeparam>
-        /// <param name="connection">Open SqlConnection</param>
-        /// <param name="entityToDelete">Entity to delete</param>
-        /// <returns>true if deleted, false if not found</returns>
-        public static async Task<bool> DeleteAsync<T>(this IDbConnection connection, T entityToDelete, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
-        {
-            if (entityToDelete == null)
-                throw new ArgumentException("Cannot Delete null Object", "entityToDelete");
+        //    for (var i = 0; i < nonIdProps.Count(); i++)
+        //    {
+        //        var property = nonIdProps.ElementAt(i);
+        //        sb.AppendFormat("{0} = @{1}", property.Name, property.Name);
+        //        if (i < nonIdProps.Count() - 1)
+        //            sb.AppendFormat(", ");
+        //    }
+        //    sb.Append(" where ");
+        //    for (var i = 0; i < keyProperties.Count(); i++)
+        //    {
+        //        var property = keyProperties.ElementAt(i);
+        //        sb.AppendFormat("{0} = @{1}", property.Name, property.Name);
+        //        if (i < keyProperties.Count() - 1)
+        //            sb.AppendFormat(" and ");
+        //    }
+        //    var updated = await connection.ExecuteAsync(sb.ToString(), entityToUpdate, commandTimeout: commandTimeout, transaction: transaction).ConfigureAwait(false);
+        //    return updated > 0;
+        //}
+        #endregion
 
-            var type = typeof(T);
+        //#region Delete
 
-            var keyProperties = KeyPropertiesCache(type);
-            if (keyProperties.Count() == 0)
-                throw new ArgumentException("Entity must have at least one [Key] property");
+        ///// <summary>
+        ///// Delete entity in table "Ts".
+        ///// </summary>
+        ///// <typeparam name="T">Type of entity</typeparam>
+        ///// <param name="connection">Open SqlConnection</param>
+        ///// <param name="entityToDelete">Entity to delete</param>
+        ///// <returns>true if deleted, false if not found</returns>
+        //public static bool Delete<T>(this IDbConnection connection, T entityToDelete, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
+        //{
+        //    if (entityToDelete == null)
+        //        throw new ArgumentException("Cannot Delete null Object", "entityToDelete");
 
-            var name = GetTableName(type);
+        //    var type = typeof(T);
 
-            var sb = new StringBuilder();
-            sb.AppendFormat("delete from {0} where ", name);
+        //    var keyProperties = KeyPropertiesCache(type);
+        //    if (!keyProperties.Any())
+        //        throw new ArgumentException("Entity must have at least one [Key] property");
 
-            for (var i = 0; i < keyProperties.Count(); i++)
-            {
-                var property = keyProperties.ElementAt(i);
-                sb.AppendFormat("{0} = @{1}", property.Name, property.Name);
-                if (i < keyProperties.Count() - 1)
-                    sb.AppendFormat(" and ");
-            }
-            var deleted = await connection.ExecuteAsync(sb.ToString(), entityToDelete, transaction: transaction, commandTimeout: commandTimeout).ConfigureAwait(false);
-            return deleted > 0;
-        }
+        //    var name = GetTableName(type);
+
+        //    var sb = new StringBuilder();
+        //    sb.AppendFormat("delete from {0} where ", name);
+
+        //    for (var i = 0; i < keyProperties.Count(); i++)
+        //    {
+        //        var property = keyProperties.ElementAt(i);
+        //        sb.AppendFormat("{0} = @{1}", property.Name, property.Name);
+        //        if (i < keyProperties.Count() - 1)
+        //            sb.AppendFormat(" and ");
+        //    }
+        //    var deleted = connection.Execute(sb.ToString(), entityToDelete, transaction: transaction, commandTimeout: commandTimeout);
+        //    return deleted > 0;
+        //}
+
+        ///// <summary>
+        ///// Delete entity in table "Ts" asynchronously using .NET 4.5 Task.
+        ///// </summary>
+        ///// <typeparam name="T">Type of entity</typeparam>
+        ///// <param name="connection">Open SqlConnection</param>
+        ///// <param name="entityToDelete">Entity to delete</param>
+        ///// <returns>true if deleted, false if not found</returns>
+        //public static async Task<bool> DeleteAsync<T>(this IDbConnection connection, T entityToDelete, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
+        //{
+        //    if (entityToDelete == null)
+        //        throw new ArgumentException("Cannot Delete null Object", "entityToDelete");
+
+        //    var type = typeof(T);
+
+        //    var keyProperties = KeyPropertiesCache(type);
+
+        //    if (!keyProperties.Any())
+        //        throw new ArgumentException("Entity must have at least one [Key] property");
+
+        //    var name = GetTableName(type);
+
+        //    var sb = new StringBuilder();
+        //    sb.AppendFormat("delete from {0} where ", name);
+
+        //    for (var i = 0; i < keyProperties.Count(); i++)
+        //    {
+        //        var property = keyProperties.ElementAt(i);
+        //        sb.AppendFormat("{0} = @{1}", property.Name, property.Name);
+        //        if (i < keyProperties.Count() - 1)
+        //            sb.AppendFormat(" and ");
+        //    }
+        //    var deleted = await connection.ExecuteAsync(sb.ToString(), entityToDelete, transaction: transaction, commandTimeout: commandTimeout).ConfigureAwait(false);
+        //    return deleted > 0;
+        //}
 
 
-        /// <summary>
-        /// Delete all entities in the table related to the type T.
-        /// </summary>
-        /// <typeparam name="T">Type of entity</typeparam>
-        /// <param name="connection">Open SqlConnection</param>
-        /// <returns>true if deleted, false if none found</returns>
-        public static bool DeleteAll<T>(this IDbConnection connection, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
-        {
-            var type = typeof(T);
-            var name = GetTableName(type);
-            var statement = String.Format("delete from {0}", name);
-            var deleted = connection.Execute(statement, null, transaction: transaction, commandTimeout: commandTimeout);
-            return deleted > 0;
-        }
+        ///// <summary>
+        ///// Delete all entities in the table related to the type T.
+        ///// </summary>
+        ///// <typeparam name="T">Type of entity</typeparam>
+        ///// <param name="connection">Open SqlConnection</param>
+        ///// <returns>true if deleted, false if none found</returns>
+        //public static bool DeleteAll<T>(this IDbConnection connection, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
+        //{
+        //    var type = typeof(T);
+        //    var name = GetTableName(type);
+        //    var statement = String.Format("delete from {0}", name);
+        //    var deleted = connection.Execute(statement, null, transaction: transaction, commandTimeout: commandTimeout);
+        //    return deleted > 0;
+        //}
 
-        /// <summary>
-        /// Delete all entities in the table related to the type T asynchronously using .NET 4.5 Task.
-        /// </summary>
-        /// <typeparam name="T">Type of entity</typeparam>
-        /// <param name="connection">Open SqlConnection</param>
-        /// <returns>true if deleted, false if none found</returns>
-        public static async Task<bool> DeleteAllAsync<T>(this IDbConnection connection, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
-        {
-            var type = typeof(T);
-            var name = GetTableName(type);
-            var statement = String.Format("delete from {0}", name);
-            var deleted = await connection.ExecuteAsync(statement, null, transaction: transaction, commandTimeout: commandTimeout).ConfigureAwait(false);
-            return deleted > 0;
-        }
-
+        ///// <summary>
+        ///// Delete all entities in the table related to the type T asynchronously using .NET 4.5 Task.
+        ///// </summary>
+        ///// <typeparam name="T">Type of entity</typeparam>
+        ///// <param name="connection">Open SqlConnection</param>
+        ///// <returns>true if deleted, false if none found</returns>
+        //public static async Task<bool> DeleteAllAsync<T>(this IDbConnection connection, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
+        //{
+        //    var type = typeof(T);
+        //    var name = GetTableName(type);
+        //    var statement = String.Format("delete from {0}", name);
+        //    var deleted = await connection.ExecuteAsync(statement, null, transaction: transaction, commandTimeout: commandTimeout).ConfigureAwait(false);
+        //    return deleted > 0;
+        //}
+        //#endregion
 
         public static ISqlAdapter GetFormatter(IDbConnection connection)
         {
@@ -541,7 +601,6 @@ namespace Dapper.Contrib.Extensions
                 //  otherwise there is a pretty dangerous case where internal actions will not update dirty tracking
                 throw new NotImplementedException();
             }
-
 
             public static T GetInterfaceProxy<T>()
             {
@@ -581,7 +640,6 @@ namespace Dapper.Contrib.Extensions
                 TypeCache.Add(typeOfT, generatedObject);
                 return (T)generatedObject;
             }
-
 
             private static MethodInfo CreateIsDirtyProperty(TypeBuilder typeBuilder)
             {
@@ -698,20 +756,20 @@ namespace Dapper.Contrib.Extensions
     {
     }
 
-    [AttributeUsage(AttributeTargets.Property)]
-    public class WriteAttribute : Attribute
-    {
-        public WriteAttribute(bool write)
-        {
-            Write = write;
-        }
-        public bool Write { get; private set; }
-    }
+    //[AttributeUsage(AttributeTargets.Property)]
+    //public class WriteAttribute : Attribute
+    //{
+    //    public WriteAttribute(bool write)
+    //    {
+    //        Write = write;
+    //    }
+    //    public bool Write { get; private set; }
+    //}
 
-    [AttributeUsage(AttributeTargets.Property)]
-    public class ComputedAttribute : Attribute
-    {
-    }
+    //[AttributeUsage(AttributeTargets.Property)]
+    //public class ComputedAttribute : Attribute
+    //{
+    //}
 }
 
 public interface ISqlAdapter
@@ -724,36 +782,54 @@ public class SqlServerAdapter : ISqlAdapter
 {
     public int Insert(IDbConnection connection, IDbTransaction transaction, int? commandTimeout, String tableName, string columnList, string parameterList, IEnumerable<PropertyInfo> keyProperties, object entityToInsert)
     {
-        string cmd = String.Format("insert into {0} ({1}) values ({2})", tableName, columnList, parameterList);
+        string cmd = $"insert into {tableName} ({columnList}) values ({parameterList})";
 
-        connection.Execute(cmd, entityToInsert, transaction: transaction, commandTimeout: commandTimeout);
+        return connection.Execute(cmd, entityToInsert, transaction: transaction, commandTimeout: commandTimeout);
 
         //NOTE: would prefer to use IDENT_CURRENT('tablename') or IDENT_SCOPE but these are not available on SQLCE
         var r = connection.Query("select @@IDENTITY id", transaction: transaction, commandTimeout: commandTimeout);
 
         int id = 0;
 
+        //找到自增主键的值
         if (r.First().id != null)
         {
             id = (int)r.First().id;
         }
- 
+
+        //装填自增主键的值
         if (keyProperties.Any())
+        {
             keyProperties.First().SetValue(entityToInsert, id, null);
+        }
+
         return id;
     }
 
     public async Task<int> InsertAsync(IDbConnection connection, IDbTransaction transaction, int? commandTimeout, String tableName, string columnList, string parameterList, IEnumerable<PropertyInfo> keyProperties, object entityToInsert)
     {
-        string cmd = String.Format("insert into {0} ({1}) values ({2})", tableName, columnList, parameterList);
+        //string cmd = String.Format("insert into {0} ({1}) values ({2})", tableName, columnList, parameterList);
+        string cmd = $"insert into {tableName} ({columnList}) values ({parameterList})";
+        return await connection.ExecuteAsync(cmd, entityToInsert, transaction: transaction, commandTimeout: commandTimeout).ConfigureAwait(false);
 
-        await connection.ExecuteAsync(cmd, entityToInsert, transaction: transaction, commandTimeout: commandTimeout).ConfigureAwait(false);
-
+        //下面是自增型数据的处理
         //NOTE: would prefer to use IDENT_CURRENT('tablename') or IDENT_SCOPE but these are not available on SQLCE
         var r = await connection.QueryAsync<dynamic>("select @@IDENTITY id", transaction: transaction, commandTimeout: commandTimeout).ConfigureAwait(false);
-        int id = (int)r.First().id;
+
+        int id = 0;
+
+        //找到自增主键的值
+        if (r.First().id != null)
+        {
+            id = (int)r.First().id;
+        }
+
+        //装填自增主键的值
         if (keyProperties.Any())
+        {
             keyProperties.First().SetValue(entityToInsert, id, null);
+        }
+
         return id;
     }
 }
@@ -837,7 +913,7 @@ public class SQLiteAdapter : ISqlAdapter
     {
         string cmd = String.Format("insert into {0} ({1}) values ({2})", tableName, columnList, parameterList);
 
-        connection.Execute(cmd, entityToInsert, transaction: transaction, commandTimeout: commandTimeout);
+        return connection.Execute(cmd, entityToInsert, transaction: transaction, commandTimeout: commandTimeout);
 
         var r = connection.Query("select last_insert_rowid() id", transaction: transaction, commandTimeout: commandTimeout);
         int id = (int)r.First().id;
@@ -850,7 +926,7 @@ public class SQLiteAdapter : ISqlAdapter
     {
         string cmd = String.Format("insert into {0} ({1}) values ({2})", tableName, columnList, parameterList);
 
-        await connection.ExecuteAsync(cmd, entityToInsert, transaction: transaction, commandTimeout: commandTimeout).ConfigureAwait(false);
+        return await connection.ExecuteAsync(cmd, entityToInsert, transaction: transaction, commandTimeout: commandTimeout).ConfigureAwait(false);
 
         var r = await connection.QueryAsync<dynamic>("select last_insert_rowid() id", transaction: transaction, commandTimeout: commandTimeout).ConfigureAwait(false);
         int id = (int)r.First().id;

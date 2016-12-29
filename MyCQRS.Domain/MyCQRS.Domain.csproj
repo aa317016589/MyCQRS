@@ -62,10 +62,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Linq2Dapper\Dapper.Contrib.Linq2Dapper.csproj">
-      <Project>{3b33ede2-3996-4b65-8998-3e2fe6a48f19}</Project>
-      <Name>Dapper.Contrib.Linq2Dapper</Name>
-    </ProjectReference>
     <ProjectReference Include="..\MyCQRS.ApplicationHelper\MyCQRS.ApplicationHelper.csproj">
       <Project>{d6228289-060d-4582-adf0-d9e8f4701486}</Project>
       <Name>MyCQRS.ApplicationHelper</Name>

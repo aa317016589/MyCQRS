@@ -76,6 +76,27 @@ namespace Dapper.Contrib.Linq2Dapper
         }
 
         /// <summary>
+        /// 设置自增
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="config"></param>
+        /// <param name="member"></param>
+        /// <returns></returns>
+        public static TableConfig<T> SelfIncrement<T>(this TableConfig<T> config, Expression<Func<T, Object>> member)
+        {
+            var propertyInfo = ReadMemberInfo(member);
+
+            var record = config.RecordRowConfigs.SingleOrDefault(s => s.ModelPropertyName == propertyInfo.Name);
+
+            if (record != null)
+            {
+                record.IsSelfIncrement = true;
+            }
+
+            return config;
+        }
+
+        /// <summary>
         /// 设置忽略
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -166,6 +187,7 @@ namespace Dapper.Contrib.Linq2Dapper
                 RecordRowConfigs.Add(new RecordRowConfig()
                 {
                     IsKey = false,
+                    IsSelfIncrement = false,
                     ModelPropertyName = propertyInfo.Name,
                     ModelProperty = propertyInfo,
                     TargetPropertyName = propertyInfo.Name
@@ -197,6 +219,9 @@ namespace Dapper.Contrib.Linq2Dapper
         /// </summary>
         public String ModelPropertyName { get; set; }
 
+        /// <summary>
+        /// 原映射的属性对象
+        /// </summary>
         public PropertyInfo ModelProperty { get; set; }
 
         /// <summary>
@@ -204,7 +229,15 @@ namespace Dapper.Contrib.Linq2Dapper
         /// </summary>
         public String TargetPropertyName { get; set; }
 
+        /// <summary>
+        /// 主键
+        /// </summary>
         public Boolean IsKey { get; set; }
+
+        /// <summary>
+        /// 自增
+        /// </summary>
+        public Boolean IsSelfIncrement { get; set; }
 
         ///// <summary>
         ///// 读取cell的时候的映射配置

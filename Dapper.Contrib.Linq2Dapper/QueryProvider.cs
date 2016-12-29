@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 using Dapper.Contrib.Linq2Dapper.Exceptions;
 using Dapper.Contrib.Linq2Dapper.Helpers;
 
- 
+
 namespace Dapper.Contrib.Linq2Dapper
 {
     internal class QueryProvider<TData> : IQueryProvider
     {
         private readonly IDbConnection _connection;
-        private readonly QueryBuilder<TData> _qb; 
+        private readonly QueryBuilder<TData> _qb;
 
         public QueryProvider(IDbConnection connection)
         {
@@ -78,7 +78,7 @@ namespace Dapper.Contrib.Linq2Dapper
             }
         }
 
-        public async Task<Object>   ExecuteAsync(Expression expression)
+        public async Task<Object> ExecuteAsync(Expression expression, bool isEnumerable)
         {
             try
             {
@@ -88,7 +88,10 @@ namespace Dapper.Contrib.Linq2Dapper
 
                 var data = await _connection.QueryAsync<TData>(_qb.Sql, _qb.Parameters);
 
-                return data;
+                if (isEnumerable)
+                    return data;
+
+                return data.ElementAt(0); ;
             }
             catch (SqlException ex)
             {

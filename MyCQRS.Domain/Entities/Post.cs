@@ -1,11 +1,9 @@
 ﻿using System;
-using Dapper.Contrib.Extensions;
 
 namespace MyCQRS.Domain.Entities
 {
     public class Post
     {
-        [Key]
         public Guid PostId { get; set; }
 
         /// <summary>

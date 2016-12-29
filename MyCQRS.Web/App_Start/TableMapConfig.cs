@@ -12,7 +12,7 @@ namespace MyCQRS.Web
         // TableMap.Config
         public static void Init()
         {
-            TableMap.Config<PostQueryEntity>("Post");
+            TableMap.Config<PostQueryEntity>("Post").Key(s => s.PostId);
         }
     }
 }

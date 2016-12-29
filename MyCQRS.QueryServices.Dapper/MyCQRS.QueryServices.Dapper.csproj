@@ -49,7 +49,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Linq2Dapper\Dapper.Contrib.Linq2Dapper.csproj">
+    <ProjectReference Include="..\Dapper.Contrib.Linq2Dapper\Dapper.Contrib.Linq2Dapper.csproj">
       <Project>{3b33ede2-3996-4b65-8998-3e2fe6a48f19}</Project>
       <Name>Dapper.Contrib.Linq2Dapper</Name>
     </ProjectReference>
