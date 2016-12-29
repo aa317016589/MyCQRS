@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Autofac;
+using Dapper.Contrib.Extensions;
 using Dapper.Contrib.Linq2Dapper;
 using Dapper.Contrib.Linq2Dapper.Extensions;
 using MyCQRS.ApplicationHelper;
@@ -17,6 +18,7 @@ using MyCQRS.Domain.Events;
 using MyCQRS.EventHandles;
 using MyCQRS.Messaging;
 using MyCQRS.ProcessManagers;
+using MyCQRS.QueryServices.DTOs;
 using MyCQRS.Storage;
 using MyCQRS.Utils;
 using MyCQRS.Web.Auxiliary;
@@ -27,14 +29,27 @@ namespace TestXC
     {
         static void Main(string[] args)
         {
+            TableMap.Config<PostQueryEntity>("Post").Key(s => s.PostId);
+
+            using (SqlConnection conn = new SqlConnection("Data Source=.;Initial Catalog=MyCQRS;User Id=sa;Password=sxf2013;multipleactiveresultsets=True;"))
+            {
+                var d = conn.Get<PostQueryEntity>(new { PostId = "BDCE398F-2211-48AB-91EA-F3490A047BD3" });
+                Console.WriteLine(d.Content);
+            }
+
+            Console.ReadKey();
+
+            return;
+
+
             PostXC postXc = new PostXC();
             postXc.Id = Guid.NewGuid();
 
             string Name = "swallow";
 
-            String result =  "{Name}:{Name}";
+            String result = "{Name}:{Name}";
 
-            Console.WriteLine(string.Format("Aggregate {{postXc.Id} has been previously modified") );
+            Console.WriteLine(string.Format("Aggregate {{postXc.Id} has been previously modified"));
 
 
 
@@ -57,7 +72,7 @@ namespace TestXC
                 });
             }
 
- 
+
             using (var conn = GetConnection())
             {
                 var posts = conn.Query<PostXC>().ToList();
