@@ -1,4 +1,5 @@
-﻿using MyCQRS.Domain;
+﻿using System.Threading.Tasks;
+using MyCQRS.Domain;
 using MyCQRS.Domain.Entities;
 using MyCQRS.Domain.Events;
 
@@ -12,7 +13,7 @@ namespace MyCQRS.EventHandles
             _reportDatabase = reportDatabase;
         }
 
-        public void Handle(PostDeleteEvent handle)
+        public async Task HandleAsync(PostDeleteEvent handle)
         {
             //保存到数据库
         }

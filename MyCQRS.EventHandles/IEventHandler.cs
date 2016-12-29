@@ -1,9 +1,10 @@
-﻿using MyCQRS.Domain.Events;
+﻿using System.Threading.Tasks;
+using MyCQRS.Domain.Events;
 
 namespace MyCQRS.EventHandles
 {
     public interface IEventHandler<TEvent> where TEvent :  Event
     {
-        void Handle(TEvent handle);
+        Task HandleAsync(TEvent handle);
     }
 }

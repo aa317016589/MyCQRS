@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Threading.Tasks;
 using Dapper.Contrib.Extensions;
 using MyCQRS.Domain;
 
@@ -13,25 +14,29 @@ namespace MyCQRS.Storage
             return new SqlConnection("Data Source=.;Initial Catalog=MyCQRS;User Id=sa;Password=sxf2013;multipleactiveresultsets=True;");
         }
 
-        public void Add(T item)
+        public async Task InsertAsync(T item)
         {
             using (var conn = GetConnection())
             {
-                conn.Insert(item);
+                await conn.InsertAsync(item);
             }
         }
 
-        public void Delete(Guid id)
+        public async Task DeleteAsync(Object condition)
         {
-            //using (var conn = GetConnection())
-            //{
-            //    conn.Delete(null);
-            //}
+            using (var conn = GetConnection())
+            {
+                await conn.DeleteAsync<T>(condition);
+            }
         }
 
-        public void Update(T item)
+
+        public async Task UpdateAsync(object data, object condition)
         {
-            throw new NotImplementedException();
+            using (var conn = GetConnection())
+            {
+                await conn.UpdateAsync<T>(data, condition);
+            }
         }
     }
 }

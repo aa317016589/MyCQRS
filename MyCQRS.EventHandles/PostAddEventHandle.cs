@@ -1,4 +1,5 @@
-﻿using MyCQRS.Domain;
+﻿using System.Threading.Tasks;
+using MyCQRS.Domain;
 using MyCQRS.Domain.Entities;
 using MyCQRS.Domain.Events;
 
@@ -13,10 +14,10 @@ namespace MyCQRS.EventHandles
         }
 
 
-        public void Handle(PostAddEvent handle)
+        public async Task HandleAsync(PostAddEvent handle)
         {
             //数据库操作 
-            _reportDatabase.Add(handle.PostDetail);
+            await _reportDatabase.InsertAsync(handle.PostDetail);
         }
     }
 }

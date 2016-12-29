@@ -1,4 +1,5 @@
-﻿using MyCQRS.Domain;
+﻿using System.Threading.Tasks;
+using MyCQRS.Domain;
 using MyCQRS.Domain.Entities;
 using MyCQRS.Domain.Events;
 
@@ -12,9 +13,9 @@ namespace MyCQRS.EventHandles
             _reportDatabase = reportDatabase;
         }
 
-        public void Handle(UserAddEvent handle)
+        public async Task HandleAsync(UserAddEvent handle)
         {
-            _reportDatabase.Add(new User()
+            await _reportDatabase.InsertAsync(new User()
             {
                 UserName = handle.UserName
             });

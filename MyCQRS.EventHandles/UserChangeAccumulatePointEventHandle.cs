@@ -1,4 +1,5 @@
-﻿using MyCQRS.Domain;
+﻿using System.Threading.Tasks;
+using MyCQRS.Domain;
 using MyCQRS.Domain.Entities;
 using MyCQRS.Domain.Events;
 
@@ -13,7 +14,7 @@ namespace MyCQRS.EventHandles
         }
  
 
-        public void Handle(ChangeAccumulatePointEvent handle)
+        public async Task HandleAsync(ChangeAccumulatePointEvent handle)
         {
            //保存到数据库
         }

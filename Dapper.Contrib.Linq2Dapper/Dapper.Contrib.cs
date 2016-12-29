@@ -19,7 +19,6 @@ namespace Dapper.Contrib.Extensions
 {
     public static class SqlMapperExtensions
     {
-  
         private static readonly ConcurrentDictionary<RuntimeTypeHandle, IEnumerable<PropertyInfo>> TypeProperties =
             new ConcurrentDictionary<RuntimeTypeHandle, IEnumerable<PropertyInfo>>();
  
@@ -456,8 +455,8 @@ namespace Dapper.Contrib.Extensions
         /// <param name="connection">Open SqlConnection</param>
         /// <param name="entityToDelete">Entity to delete</param>
         /// <returns>true if deleted, false if not found</returns>
-        public static bool Delete<T>(this IDbConnection connection, object condition, IDbTransaction transaction = null,
-            int? commandTimeout = null) where T : class
+        public static bool Delete<T>(this IDbConnection connection, object condition, IDbTransaction transaction = null,  int? commandTimeout = null)  
+            where T : class
         {
             var name = GetTableName(typeof(T));
 

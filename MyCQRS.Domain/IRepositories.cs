@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace MyCQRS.Domain
 {
     public interface IRepositories<T> where T : class
-    { 
-        void Add(T item);
-        void Delete(Guid id);
-        void Update(T item);
+    {
+        Task InsertAsync(T item);
+        Task DeleteAsync(Object condition);
+        Task UpdateAsync(Object data, Object condition);
     }
 }
