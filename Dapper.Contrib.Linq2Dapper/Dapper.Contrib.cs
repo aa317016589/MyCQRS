@@ -19,9 +19,6 @@ namespace Dapper.Contrib.Extensions
 {
     public static class SqlMapperExtensions
     {
-        private static readonly ConcurrentDictionary<RuntimeTypeHandle, IEnumerable<PropertyInfo>> TypeProperties =
-            new ConcurrentDictionary<RuntimeTypeHandle, IEnumerable<PropertyInfo>>();
- 
         private static readonly ConcurrentDictionary<Type, IEnumerable<PropertyInfo>> ParamCache =
             new ConcurrentDictionary<Type, IEnumerable<PropertyInfo>>();
 
@@ -32,22 +29,18 @@ namespace Dapper.Contrib.Extensions
                 {"npgsqlconnection", new PostgresAdapter()},
                 {"sqliteconnection", new SQLiteAdapter()}
             };
-
-         
+ 
         private static IEnumerable<PropertyInfo> TypePropertiesCache(Type type)
         {
             IEnumerable<PropertyInfo> pis;
-            if (TypeProperties.TryGetValue(type.TypeHandle, out pis))
+            if (ParamCache.TryGetValue(type, out pis))
             {
                 return pis;
             }
-
-            //移除WriteAttribute，不适用此的话，将不会出现在集合中。
-            //var properties = type.GetProperties().Where(IsWriteable).ToArray();
-
+  
             var properties = TableMap.Configs[type].RecordRowConfigs.Select(s => s.ModelProperty);
 
-            TypeProperties[type.TypeHandle] = properties;
+            ParamCache[type] = properties;
 
             return properties;
         }
@@ -239,7 +232,7 @@ namespace Dapper.Contrib.Extensions
         }
 
         #endregion
- 
+
         #region Insert
 
         /// <summary>
@@ -254,37 +247,13 @@ namespace Dapper.Contrib.Extensions
             var type = typeof(T);
             var name = GetTableName(type);
             var allProperties = TypePropertiesCache(type); //全部的
-            //var keyProperties = KeyPropertiesCache(type);//主键,准确地说应该是自增类型的或者是由数据库生成的
-            //var computedProperties = ComputedPropertiesCache(type);//带有列名的，这里表示自增类型的
-            //var allPropertiesExceptKeyAndComputed = allProperties.Except(computedProperties);
+
             var sbColumn = String.Join(", ", allProperties.Select(s => $"[{s.Name}]"));
             var sbParameter = String.Join(", ", allProperties.Select(s => $"@{s.Name}"));
 
             ISqlAdapter adapter = GetFormatter(connection);
             return adapter.Insert(connection, transaction, commandTimeout, name, sbColumn, sbParameter, null,
                 entityToInsert);
-
-
-            //for (var i = 0; i < allPropertiesExceptKeyAndComputed.Count(); i++)
-            //{
-            //    var property = allPropertiesExceptKeyAndComputed.ElementAt(i);
-            //    sbColumnList.AppendFormat("[{0}]", property.Name);
-
-            //    if (i < allPropertiesExceptKeyAndComputed.Count() - 1)
-            //        sbColumnList.Append(", ");
-            //}
-
-
-            //for (var i = 0; i < allPropertiesExceptKeyAndComputed.Count(); i++)
-            //{
-            //    var property = allPropertiesExceptKeyAndComputed.ElementAt(i);
-            //    sbParameterList.AppendFormat("@{0}", property.Name);
-            //    if (i < allPropertiesExceptKeyAndComputed.Count() - 1)
-            //        sbParameterList.Append(", ");
-            //}
-
-
-
         }
 
         /// <summary>
@@ -297,7 +266,6 @@ namespace Dapper.Contrib.Extensions
         public static Task<int> InsertAsync<T>(this IDbConnection connection, T entityToInsert,
             IDbTransaction transaction = null, int? commandTimeout = null) where T : class
         {
-
             var type = typeof(T);
             var name = GetTableName(type);
             var allProperties = TypePropertiesCache(type); //全部的
@@ -307,44 +275,13 @@ namespace Dapper.Contrib.Extensions
             ISqlAdapter adapter = GetFormatter(connection);
             return adapter.InsertAsync(connection, transaction, commandTimeout, name, sbColumn, sbParameter, null,
                 entityToInsert);
-
-
-            //var type = typeof(T);
-
-            //var name = GetTableName(type);
-
-            //var sbColumnList = new StringBuilder(null);
-
-            //var allProperties = TypePropertiesCache(type);
-            //var keyProperties = KeyPropertiesCache(type);
-            //var computedProperties = ComputedPropertiesCache(type);
-            //var allPropertiesExceptKeyAndComputed = allProperties.Except(keyProperties.Union(computedProperties));
-
-            //for (var i = 0; i < allPropertiesExceptKeyAndComputed.Count(); i++)
-            //{
-            //    var property = allPropertiesExceptKeyAndComputed.ElementAt(i);
-            //    sbColumnList.AppendFormat("[{0}]", property.Name);
-            //    if (i < allPropertiesExceptKeyAndComputed.Count() - 1)
-            //        sbColumnList.Append(", ");
-            //}
-
-            //var sbParameterList = new StringBuilder(null);
-            //for (var i = 0; i < allPropertiesExceptKeyAndComputed.Count(); i++)
-            //{
-            //    var property = allPropertiesExceptKeyAndComputed.ElementAt(i);
-            //    sbParameterList.AppendFormat("@{0}", property.Name);
-            //    if (i < allPropertiesExceptKeyAndComputed.Count() - 1)
-            //        sbParameterList.Append(", ");
-            //}
-            //ISqlAdapter adapter = GetFormatter(connection);
-            //return adapter.InsertAsync(connection, transaction, commandTimeout, name, sbColumnList.ToString(), sbParameterList.ToString(), keyProperties, entityToInsert);
         }
 
         #endregion
 
         #region Update
 
-        /// <summary>
+/// <summary>
         /// Updates entity in table "Ts", 
         /// checks if the entity is modified if the entity is tracked by the Get() extension.
         /// </summary>
@@ -368,8 +305,7 @@ namespace Dapper.Contrib.Extensions
             sb.Append(String.Join(" and ", whereProperties.Select(s => $"{s.Name}=@{s.Name}")));
 
             return
-                connection.Execute(sb.ToString(), condition, commandTimeout: commandTimeout, transaction: transaction) >
-                0;
+                connection.Execute(sb.ToString(), condition, commandTimeout: commandTimeout, transaction: transaction) > 0;
         }
 
         /// <summary>
@@ -401,49 +337,7 @@ namespace Dapper.Contrib.Extensions
                     connection.ExecuteAsync(sb.ToString(), condition, commandTimeout: commandTimeout,
                         transaction: transaction) > 0;
         }
-
-        //public static async Task<bool> UpdateAsync<T>(this IDbConnection connection, T entityToUpdate, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
-        //{
-        //    var proxy = entityToUpdate as IProxy;
-        //    if (proxy != null)
-        //    {
-        //        if (!proxy.IsDirty) return false;
-        //    }
-
-        //    var type = typeof(T);
-
-        //    var keyProperties = KeyPropertiesCache(type);
-        //    if (!keyProperties.Any())
-        //        throw new ArgumentException("Entity must have at least one [Key] property");
-
-        //    var name = GetTableName(type);
-
-        //    var sb = new StringBuilder();
-        //    sb.AppendFormat("update {0} set ", name);
-
-        //    var allProperties = TypePropertiesCache(type);
-        //    var computedProperties = ComputedPropertiesCache(type);
-        //    var nonIdProps = allProperties.Except(keyProperties.Union(computedProperties));
-
-        //    for (var i = 0; i < nonIdProps.Count(); i++)
-        //    {
-        //        var property = nonIdProps.ElementAt(i);
-        //        sb.AppendFormat("{0} = @{1}", property.Name, property.Name);
-        //        if (i < nonIdProps.Count() - 1)
-        //            sb.AppendFormat(", ");
-        //    }
-        //    sb.Append(" where ");
-        //    for (var i = 0; i < keyProperties.Count(); i++)
-        //    {
-        //        var property = keyProperties.ElementAt(i);
-        //        sb.AppendFormat("{0} = @{1}", property.Name, property.Name);
-        //        if (i < keyProperties.Count() - 1)
-        //            sb.AppendFormat(" and ");
-        //    }
-        //    var updated = await connection.ExecuteAsync(sb.ToString(), entityToUpdate, commandTimeout: commandTimeout, transaction: transaction).ConfigureAwait(false);
-        //    return updated > 0;
-        //}
-
+ 
         #endregion
 
         #region Delete
@@ -455,7 +349,7 @@ namespace Dapper.Contrib.Extensions
         /// <param name="connection">Open SqlConnection</param>
         /// <param name="entityToDelete">Entity to delete</param>
         /// <returns>true if deleted, false if not found</returns>
-        public static bool Delete<T>(this IDbConnection connection, object condition, IDbTransaction transaction = null,  int? commandTimeout = null)  
+        public static bool Delete<T>(this IDbConnection connection, object condition, IDbTransaction transaction = null, int? commandTimeout = null)
             where T : class
         {
             var name = GetTableName(typeof(T));
@@ -502,7 +396,47 @@ namespace Dapper.Contrib.Extensions
         #endregion
 
         #region 暂时不知道什么用
+        //public static async Task<bool> UpdateAsync<T>(this IDbConnection connection, T entityToUpdate, IDbTransaction transaction = null, int? commandTimeout = null) where T : class
+        //{
+        //    var proxy = entityToUpdate as IProxy;
+        //    if (proxy != null)
+        //    {
+        //        if (!proxy.IsDirty) return false;
+        //    }
 
+        //    var type = typeof(T);
+
+        //    var keyProperties = KeyPropertiesCache(type);
+        //    if (!keyProperties.Any())
+        //        throw new ArgumentException("Entity must have at least one [Key] property");
+
+        //    var name = GetTableName(type);
+
+        //    var sb = new StringBuilder();
+        //    sb.AppendFormat("update {0} set ", name);
+
+        //    var allProperties = TypePropertiesCache(type);
+        //    var computedProperties = ComputedPropertiesCache(type);
+        //    var nonIdProps = allProperties.Except(keyProperties.Union(computedProperties));
+
+        //    for (var i = 0; i < nonIdProps.Count(); i++)
+        //    {
+        //        var property = nonIdProps.ElementAt(i);
+        //        sb.AppendFormat("{0} = @{1}", property.Name, property.Name);
+        //        if (i < nonIdProps.Count() - 1)
+        //            sb.AppendFormat(", ");
+        //    }
+        //    sb.Append(" where ");
+        //    for (var i = 0; i < keyProperties.Count(); i++)
+        //    {
+        //        var property = keyProperties.ElementAt(i);
+        //        sb.AppendFormat("{0} = @{1}", property.Name, property.Name);
+        //        if (i < keyProperties.Count() - 1)
+        //            sb.AppendFormat(" and ");
+        //    }
+        //    var updated = await connection.ExecuteAsync(sb.ToString(), entityToUpdate, commandTimeout: commandTimeout, transaction: transaction).ConfigureAwait(false);
+        //    return updated > 0;
+        //}
         //public interface IProxy
         //{
         //    bool IsDirty { get; set; }
