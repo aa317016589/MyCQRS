@@ -12,7 +12,7 @@ namespace MyCQRS.QueryServices.Dapper
     {
         public async Task<IEnumerable<PostQueryEntity>> GetPosts()
         {
-            return await GetConnection().Query<PostQueryEntity>().ToListAsync();
+            return await Connection.Query<PostQueryEntity>().ToListAsync();
         }
     }
 }

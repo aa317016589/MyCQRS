@@ -1,9 +1,7 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyCQRS.QueryServices.DTOs
 {
-    [Table("Post")]
     public class PostQueryEntity
     {
         public Guid PostId { get; set; }

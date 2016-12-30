@@ -42,7 +42,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DTOs\PostQueryEntity.cs" />
+    <Compile Include="DTOs\UserQueryEntity.cs" />
     <Compile Include="IPostQueryServices.cs" />
+    <Compile Include="IUserQueryServices.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -640,7 +640,7 @@ namespace Dapper.Contrib.Extensions
         public async Task<int> InsertAsync(IDbConnection connection, IDbTransaction transaction, int? commandTimeout, String tableName, string columnList, string parameterList, IEnumerable<PropertyInfo> keyProperties, object entityToInsert)
         {
             //string cmd = String.Format("insert into {0} ({1}) values ({2})", tableName, columnList, parameterList);
-            string cmd = $"insert into {tableName} ({columnList}) values ({parameterList})";
+            string cmd = $"insert into [{tableName}] ({columnList}) values ({parameterList})";
             return await connection.ExecuteAsync(cmd, entityToInsert, transaction: transaction, commandTimeout: commandTimeout).ConfigureAwait(false);
 
             //下面是自增型数据的处理

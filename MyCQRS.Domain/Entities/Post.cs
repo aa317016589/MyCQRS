@@ -2,7 +2,7 @@
 
 namespace MyCQRS.Domain.Entities
 {
-    public class Post
+    public class Post 
     {
         public Guid PostId { get; set; }
 
@@ -49,6 +49,7 @@ namespace MyCQRS.Domain.Entities
             ReplyCount = 0;
             ReadCount = 0;
             GreatCount = 0;
+            CreateDateTime = DateTime.Now;
         }
     }
 }

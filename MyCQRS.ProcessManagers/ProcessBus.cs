@@ -21,7 +21,11 @@ namespace MyCQRS.ProcessManagers
         public async Task HandleAsync<T>(T @event) where T : Event
         {
             // ReSharper disable once PossibleNullReferenceException
-            await _processFactory.Process<T>()?.ProcessAsync(@event, _commandBus);
+            var iprocess = _processFactory.Process<T>();
+            if (iprocess != null)
+            {
+                await iprocess.ProcessAsync(@event, _commandBus);
+            }
         }
     }
 }

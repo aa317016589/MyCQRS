@@ -27,22 +27,20 @@ namespace MyCQRS.Web.Controllers
         {
             IEnumerable<PostQueryEntity> postsEntities = await _postQueryServices.GetPosts();
 
-            return View();
+            return View(postsEntities);
         }
 
         [HttpPost]
-        public async Task<ActionResult> Add(PostViewModel postViewModel)
+        public async Task<ActionResult> Create(PostViewModel postViewModel)
         {
             Post post = ServiceLocator.Current.Container.Resolve<IMapper>().Map<Post>(postViewModel);
-
-            post.UserId = Guid.NewGuid();
-
+ 
             await ServiceLocator.Current.CommandBus.SendAsync(new PostAddCommand(post.PostId, -1, post));
 
-            return View();
+            return RedirectToAction("Index");
         }
 
-        public ActionResult Add()
+        public ActionResult Create()
         {
             return View();
         }

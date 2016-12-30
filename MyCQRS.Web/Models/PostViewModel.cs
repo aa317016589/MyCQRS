@@ -15,5 +15,10 @@ namespace MyCQRS.Web.Models
         /// </summary>
         // ReSharper disable once BuiltInTypeReferenceStyle
         public String Content { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Guid UserId { get; set; }
     }
 }
