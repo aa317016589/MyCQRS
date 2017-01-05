@@ -26,8 +26,8 @@ namespace MyCQRS.Web.Auxiliary
             builder.RegisterType<ProcessFactory>().As<IProcessFactory>();
             builder.RegisterType<ProcessBus>().As<IProcessBus>();
             builder.RegisterType<EventBus>().As<IEventBus>();
-            builder.RegisterType<InMemoryEventStorage>().As<IEventStorage>();
-            builder.RegisterGeneric(typeof(EventRepository<>)).As(typeof(IEventRepository<>)).InstancePerLifetimeScope();
+            builder.RegisterType<InMemoryEventStorage>().As<IEventStorage>().SingleInstance();
+            builder.RegisterGeneric(typeof(EventRepository<>)).As(typeof(IEventRepository<>)).SingleInstance();
             // ReSharper disable once CoVariantArrayConversion
             builder.RegisterTypes(
                 typeof(ICommandHandler<>).Assembly.DefinedTypes.Where(
