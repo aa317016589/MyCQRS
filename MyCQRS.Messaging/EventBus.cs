@@ -23,6 +23,7 @@ namespace MyCQRS.Messaging
                 await eventHandler.HandleAsync(@event);
 
                 //搜寻该事件的后续操作，即不属于该聚合根的操作，由 _processFactory找到对应的Process 重新产生 command 发送
+
                 await _processBus.HandleAsync(@event);
             }
         }
